@@ -1,15 +1,6 @@
 import numpy as np
-import scipy.linalg as la
-from pyscf.pbc import gto
-import re 
-def Frac2Real(cellsize, coord):
-    assert cellsize.ndim == 2 and cellsize.shape[0] == cellsize.shape[1]
-    return np.dot(coord, cellsize)
-
-def Real2Frac(cellsize, coord):
-    assert cellsize.ndim == 2 and cellsize.shape[0] == cellsize.shape[1]
-    return np.dot(coord, la.inv(cellsize))
-
+from mqc.tools.tools import Frac2Real, Real2Frac
+import re
 
 def read_poscar(fname="POSCAR"):
     """
@@ -71,7 +62,7 @@ def read_poscar(fname="POSCAR"):
         #cell.unit = 'A'
         return atom_col
 
-def read_structure(fname = 'structure.mol'):
+def read_mol_structure(fname = 'structure.mol'):
     geometry = []
     mol_file = open(fname,'r+')
     frags=[]
@@ -91,28 +82,9 @@ def read_structure(fname = 'structure.mol'):
         line = mol_file.readline()
     return geometry
 
-
-class Base_structure():
-    def __init__(self,geometry = None,file_path = None,file_format = None):
-        if geometry is not None:
-            self.geometry = geometry
-        elif file_path is not None:
-            if file_format == "POSCAR":
-                self.geometry = read_poscar(fname=file_path)
-            elif file_format == "mol":
-                self.geometry = read_structure(fname = file_path)
-        else:
-            raise ValueError("Either geometry or file path should be given")
-    
-    def print_structure_for_Gauss_View(self,file_name = "structure.com"):
-        geometry = self.geometry
+def print_structure_for_Gauss_View(geometry,file_name = "structure.com"):
         GV_file = open(file_name,'w+')
         GV_file.write("# HF/3-21G** opt pop=full gfprint\n\nTitle: Created by Jmol version 14.31.60  2021-10-18 20:23\n\n0 1\n")
         for i in range(len(geometry)):
             GV_file.write(geometry[i][0]+'    '+str(geometry[i][1][0])+'   '+str(geometry[i][1][1])+'   '+str(geometry[i][1][2])+'   \n')
         GV_file.close()
-
-    def transform(self):
-        '''Transform the input structure to a simpler structure'''
-        pass
-
