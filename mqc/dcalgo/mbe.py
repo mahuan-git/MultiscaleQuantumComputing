@@ -1,16 +1,98 @@
 '''
 Many Body Expansion 
 '''
-import numpy as np
 import os
+import time
+import numpy as np
 from itertools import combinations
 from pyscf import gto, scf
+from mqc.system.fragment import Fragment
 from scf_from_pyscf import pyscf_interface
 from fermion_operator import FermionOps
 from set_options import set_options
-import time
 
-class MBE_1(object):
+
+class MBEAlgo(object):
+    def __init__(   self, 
+                    fragment:Fragment,
+                    solver : str = "pyscf_rhf",
+                    isTI: bool = False,
+                    link_atom: bool = True
+                    ):
+        self.frag = fragment
+        self.qm_fragment = fragment.qm_fragment
+        self.num_frag = len(self.qm_fragment)
+        self.solver = solver.lower()
+
+        self.mbe_1 = None
+        self.mbe_2 = None
+        self.mbe_3 = None
+        self.isTI = isTI
+        self.link_atom = link_atom
+
+        self.mbe_energy = None
+
+    def get_mbe_1(self):
+        self.mbe_1=[]
+        if self.isTI == True:
+            energy_1 = self.get_energy(self.qm_fragment[0])
+            for i in range(self.num_frag):
+                self.mbe_1.append(energy_1)
+        else:
+            for i in range(self.num_frag):
+                self.mbe_1.append(self.get_energy(self.qm_fragment[i]))
+    
+    def get_mbe_2(self):
+        self.mbe_2=[]
+        if self.isTI == True:
+            mbe_2_tmp=[]
+            for i in np.arange(1,self.num_frag):
+                atom_list = []
+                for atom_idx in self.qm_fragment[0]:
+                    atom_list.append(atom_idx)
+                for atom_idx in self.qm_fragment[i]:
+                    atom_list.append(atom_idx)
+                mbe_2_tmp.append(self.get_energy(atom_list))
+            for i in range(self.num_frag-1):
+                for j in np.arange(i,self.num_frag-1):
+                    self.mbe_2.append(mbe_2_tmp[j])
+        else:
+            for atom_list in combinations(self.qm_fragment,2):
+                atom_list_re = []
+                for frag in atom_list:
+                    for atom_idx in frag:
+                        atom_list_re.append(atom_idx)
+                self.mbe_2.append(self.get_energy(atom_list_re))
+    
+    def get_mbe_3(self):
+        self.mbe_3=[]
+        for atom_list in combinations(self.qm_fragment,3):
+            atom_list_re = []
+            for frag in atom_list:
+                for atom_idx in frag:
+                    atom_list_re.append(atom_idx)
+            self.mbe_3.append(self.get_energy(atom_list_re))
+
+    def get_mbe_energy( self,  order :int =2 ):
+        from scipy.special import comb
+        if order >3:
+            raise ValueError('mbe order larger than 3 not supported')
+        for i in np.arange(order,0,-1):
+            if getattr(self,"mbe_"+str(i)) is None:
+                getattr(self,"get_mbe_"+str(i))()
+        def _coeficient(n,o,x):
+            return comb(n-x-1,o-x)*((-1)**(o-x))
+        self.mbe_energy = 0
+        for i in np.arange(order,0,-1):
+            self.mbe_energy += sum(getattr(self,"mbe_"+str(i)))*_coeficient(self.num_frag,order,i)
+        return(self.mbe_energy)        
+        
+    def get_energy(self,atom_list):
+        from mqc.solver import mbe_solver
+        energy = getattr(mbe_solver,self.solver)(geometry = self.frag.geometry,atom_list = atom_list, basis = self.frag.basis , link_atom = self.link_atom, connection = self.frag.connection)
+        return energy
+
+class MBE(object):
     def __init__(   self,
                     geometry: list,
                     fragment: list,   # information about atom indices every fragment holds
@@ -45,12 +127,6 @@ class MBE_1(object):
         mf.max_cycle = 1000
         mf.scf(dm0=None)
         self.mf = mf
-
-    def fractorial(self,n : int):
-        if n==1 or n==0:
-            return 1
-        else:
-            return n*self.fractorial(n-1)
 
 
     def get_mbe_energy( self,
@@ -213,8 +289,6 @@ class MBE_1(object):
         
         return energy
 
-
-
 class MBE(object):
     def __init__(   self,
                     geometry: list,
@@ -322,11 +396,7 @@ class MBE(object):
         d2=(coord2[0]-coord1[0])**2+(coord2[1]-coord1[1])**2+(coord2[2]-coord1[2])**2
         d= np.sqrt(d2)
         return d
-    def fractorial(self,n : int):
-        if n==1 or n==0:
-            return 1
-        else:
-            return n*self.fractorial(n-1)
+
 
     def get_mbe_energy_approx( self,
                         n:int, # MBE order
@@ -396,37 +466,6 @@ class MBE(object):
         self.mbe_energy = mbe_energy
         return(mbe_energy)
 
-
-    def get_n_th_order_mbe( self,
-                            n:int, #MBE order
-                            ):
-        if n==0:
-            mbe_energy_0=0
-            for i in range(len(self.fragment)):
-                mbe_energy_0+=self.get_energy(self.fragment[i])
-            self.mbe_series.append(mbe_energy_0)
-        elif n>len(self.fragment):
-            print('exceeds highest order')
-            exit()
-        elif n>len(self.mbe_series):
-            print('lower order energy needed')
-            exit()
-        else:
-            num_fragment = len(self.fragment)
-            mbe_energy=0
-            for atom_list in combinations(self.fragment,n+1):
-                print(atom_list)
-                atom_list_re = []
-                for frag in atom_list:
-                    for atom_idx in frag:
-                        atom_list_re.append(atom_idx)
-                print(atom_list_re)
-                mbe_energy += self.get_energy(atom_list_re)
-            for i in range(n):
-                print(self.fractorial(num_fragment-i-1))
-                mbe_energy -= self.mbe_series[i]*self.fractorial(num_fragment-i-1)/(self.fractorial(num_fragment-n-1)*self.fractorial(n-i))
-                print(mbe_energy)
-            self.mbe_series.append(mbe_energy)
     
     def check_mbe_2_skip(self,thres = 1e-6):
         idx = 0
@@ -578,6 +617,7 @@ class MBE(object):
                     else:
                         pass
             print(skip_dict)
+
     def get_mbe_3(self):
         self.mbe_3=[]
         for atom_list in combinations(self.fragment,3):

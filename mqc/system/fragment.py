@@ -1,56 +1,109 @@
 import numpy as np
 from mqc.tools.tools import get_distance
 import copy
-from .structure import Structure
+from .structure import Structure, Structure_Al
+from pyscf import gto, scf, cc
 
 class Fragment(object):
     ''' Define fragments 
     '''  
-    def __init__(self, structure: Structure, qm_atom_list = None, mm_charges=None):
-        '''
-        '''
+    def __init__(   self, 
+                    structure: Structure,
+                    basis = 'sto-3g',
+                    charge = 0,
+                    restricted =True,
+                    run_ccsd = False
+                    ):
         self.structure = structure
-        self.geometry = structure.geometry
+        self.geometry = structure.qm_geometry
 
-        self.nfrag = 0
-        self.qm_list = []
-
-        self.mm_list = []
-        self.mm_charges = mm_charges
-        self.qm_atom_list = qm_atom_list
-        self.get_qm_list()
-        self.get_mm_atom()
+        self.basis = basis
+        self.charge = charge
+        self.restricted = restricted
+        self.mol = None
+        self.mf = None
+        self.run_ccsd = run_ccsd
+        self.cc = None
+        self.cc_energy = None
         self.connection = []
+
+        self.qm_fragment = None
+
+    def build(self):
+        self.get_qm_fragment()
+
+        if self.restricted:
+            self.run_pyscf_rhf()
+        else:
+            self.run_pyscf_uhf()
+        
+        if self.run_ccsd:
+            if self.restricted:
+                self.run_pyscf_rccsd()
+            else:
+                self.run_pyscf_uccsd()
         self.get_connection()
 
-    def get_qm_list(self):
-        '''
-        '''
-        if not (self.atom_list==None):
-            self._qm_list = self.atom_list
-        else:
-            #print(self._qm_list)
-            assert(self._qm_list ==None)
-            print('atom list or natom_per_fragment not given')
-            exit()
+    def run_pyscf_rhf(self):
+        mol=gto.Mole()
+        mol.atom=self.geometry
+        mol.basis = self.basis
+        mol.charge = self.charge
+        assert( mol.nelectron%2 ==0)
+        mol.spin = 0
+        mol.build()
+        self.mol = mol
 
-    def get_mm_atom(self):
-        '''
-        '''
-        list_all = list(range(self._nfrag))
-        for i in range(self._nfrag):
-            self.mm_list.append([x for x in list_all if x not in self._qm_list[i]])
+        mf = scf.RHF(mol)
+        mf.verbose = 3
+        mf.max_cycle = 1000
+        mf.scf(dm0=None)
+        self.mf = mf
+    
+    def run_pyscf_uhf(self):
+        mol=gto.Mole()
+        mol.atom=self.geometry
+        mol.basis = self.basis
+        mol.charge = self.charge
+        mol.spin = mol.nelectron%2
+        mol.build()
+        self.mol = mol
+
+        mf = scf.UHF(mol)
+        mf.verbose = 3
+        mf.max_cycle = 1000
+        mf.scf(dm0=None)
+        self.mf = mf
+        
+    def run_pyscf_rccsd(self):
+        if self.mf == None:
+            self.run_pyscf_rhf()
+        mycc = cc.RCCSD(self.mf).run()
+        self.cc = mycc
+    
+    def run_pyscf_uccsd(self):
+        if self.mf == None:
+            self.run_pyscf_uhf()
+        mycc = cc.UCCSD(self.mf).run()
+        self.cc = mycc
+    
+    def get_qm_fragment(self,qm_fragment = None):
+        """By default, all atoms are put in one fragment"""
+        if qm_fragment is not None:
+            self.qm_fragment = qm_fragment
+        else:
+            self.qm_fragment = [self.structure.qm_atom_list]
 
     def get_connection(self):
         connection=[]
-        natom = len(self._geometry)
+        natom = len(self.geometry)
         for i in range(natom):
             connection_tmp = []
             for j in range(natom):
                 if j==i:
                     dist = 2
                 else:
-                    dist = get_distance(self._geometry[i][1],self._geometry[j][1])
+                    dist = get_distance(self.geometry[i][1],self.geometry[j][1])
                 if dist < 1.75:
                     connection_tmp.append(j)
             connection.append(connection_tmp)
@@ -59,65 +112,50 @@ class Fragment(object):
 class SimpleFragment(Fragment):
     ''' fragments for simple systems such as hydrogen chain. Devide fragments based on number of atoms in per fragment.
     '''  
-    def __init__(self, structure: Structure,natom_per_fragment = None):
-        '''
-        '''
-        self.structure = structure
-        self.geometry = structure.geometry
-        self.nfrag = 0
-        self.qm_list = []
-        self.mm_list = None
+    def __init__(self, structure: Structure, basis='sto-3g', charge=0, restricted=True, run_ccsd=False,natom_per_fragment=2):
+        super().__init__(structure, basis, charge, restricted, run_ccsd)
         self.natom_per_fragment = natom_per_fragment
-        self.get_qm_list()
-        self.connection = []
 
-    def get_qm_list(self):
+    def get_qm_fragment(self):
         '''
         '''
-        natom_per_fragment = self.natom_per_fragment
-        assert(len(self.geometry)%natom_per_fragment==0)
-        self.nfrag = len(self.geometry)//natom_per_fragment
+        self.qm_fragment = []
+        assert(len(self.geometry)%self.natom_per_fragment==0)
+        self.nfrag = len(self.geometry)//self.natom_per_fragment
         for i in range(self.nfrag):
-            frag = np.arange(natom_per_fragment*i,natom_per_fragment*i+natom_per_fragment)
-            self._qm_list.append(list(frag))
+            frag = np.arange(self.natom_per_fragment*i,self.natom_per_fragment*i+self.natom_per_fragment)
+            self.qm_fragment.append(list(frag))
 
-class Fragment_orbitals(Fragment):
-    ''' Define fragments based on orbitals.
-    '''  
-    def __init__(self, structure: Structure,natom_per_fragment = None,atom_list = None, mm_charges=None):
-        '''
-        '''
-        self.structure = structure
-        self._geometry = structure.geometry
-
-        self._nfrag = 0
-        self._qm_list = []
-
-        self._mm_list = []
-        self._mm_charges = mm_charges
-        self.natom_per_fragment = natom_per_fragment
-        self.atom_list = atom_list
-        self.get_qm_list()
-        self.get_mm_atom()
-        self.connection = []
-        self.get_connection()
-
-    def get_qm_list(self):
-        '''
-        '''
-        if not (self.natom_per_fragment == None):
-            natom_per_fragment = self.natom_per_fragment
-            self._nfrag = len(self._geometry)//natom_per_fragment
-            for i in range(self._nfrag):
-                frag = np.arange(natom_per_fragment*i,natom_per_fragment*i+natom_per_fragment)
-                self._qm_list.append(list(frag))
-        elif not (self.atom_list==None):
-            self._qm_list = self.atom_list
+class Fragment_Al_MBE(Fragment):
+    def get_qm_fragment(self, qm_fragment=None):
+        if qm_fragment is not None:
+            return super().get_qm_fragment(qm_fragment)
         else:
-            #print(self._qm_list)
-            assert(self._qm_list ==None)
-            print('atom list or natom_per_fragment not given')
-            exit()
+            """define default qm fragment"""
+            self.qm_fragment = []
+            substrate_list = []
+            molecule_list = []
+            for idx in range(len(self.geometry)):
+                if self.geometry[idx][0] =="Al":
+                    substrate_list.append(idx)
+                else:
+                    molecule_list.append(idx)
+            self.qm_fragment.append(substrate_list)
+            self.qm_fragment.append(molecule_list)
+
+class Fragment_Al_DMET(Fragment):
+    def __init__(self, structure: Structure, basis='sto-3g', charge=0, restricted=True, run_ccsd=False):
+        super().__init__(structure, basis, charge, restricted, run_ccsd)
+
+    def get_qm_fragment(self, qm_fragment=None):
+        if qm_fragment is not None:
+            return super().get_qm_fragment(qm_fragment)
+        else:
+            self.qm_fragment = []
+            self.qm_fragment.append(list(self.structure._bonding_atom_index.values()))
+
+    def mulliken_pop_analyse(self):
+        pass
 
 class Fragment_protein(Fragment):
     ''' Fragment class especially for proteins.
