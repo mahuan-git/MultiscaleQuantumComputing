@@ -3,7 +3,7 @@ import dmet as dmet
 import numpy as np
 from mqc.system.fragment import Fragment
 
-class DMETAlgo(object):
+class DMET_base(object):
     def __init__(self,fragment: Fragment, method = "CC",SCmethod = "NONE", isTI = False):
         self.fragment = fragment
         self.mol = fragment.mol

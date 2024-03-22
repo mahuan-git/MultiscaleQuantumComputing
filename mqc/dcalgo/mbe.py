@@ -7,19 +7,17 @@ import numpy as np
 from itertools import combinations
 from pyscf import gto, scf
 from mqc.system.fragment import Fragment
-from scf_from_pyscf import pyscf_interface
-from fermion_operator import FermionOps
-from set_options import set_options
 
-
-class MBEAlgo(object):
+class MBE_base(object):
     def __init__(   self, 
                     fragment:Fragment,
                     solver : str = "pyscf_rhf",
                     isTI: bool = False,
-                    link_atom: bool = True
+                    link_atom: str = "extend"
                     ):
-        self.frag = fragment
+        assert link_atom in ["extend","origin",None], "link atom mode not supported"
+        assert solver in ["pyscf_uhf","pyscf_rhf"] , "solver not supported"
+        self.fragment = fragment
         self.qm_fragment = fragment.qm_fragment
         self.num_frag = len(self.qm_fragment)
         self.solver = solver.lower()
@@ -89,204 +87,43 @@ class MBEAlgo(object):
         
     def get_energy(self,atom_list):
         from mqc.solver import mbe_solver
-        energy = getattr(mbe_solver,self.solver)(geometry = self.frag.geometry,atom_list = atom_list, basis = self.frag.basis , link_atom = self.link_atom, connection = self.frag.connection)
+        energy = getattr(mbe_solver,self.solver)(fragment = self.fragment,
+                                                 atom_list = atom_list, 
+                                                 link_atom = self.link_atom, 
+                                                 )
         return energy
 
-class MBE(object):
-    def __init__(   self,
-                    geometry: list,
-                    fragment: list,   # information about atom indices every fragment holds
-                    solver  : str = 'uhf',
-                    basis : str = 'sto_3g',
-                    periodic: bool = False,
-                    link_atom :bool = False   #used when bond break and need to saturate bonds
-                    ):
-        self.geometry = geometry
-        self.fragment = fragment
-        self.solver = solver.lower()
-        self.mbe_series = []
-        self.mbe_energy=None
-        self.mbe_1=None
-        self.mbe_2=None
-        self.mbe_3=None
-        self.mbe_4=None
-        self.mbe_5=None
-        self.basis = basis
-        self.periodic = periodic
-        self.link_atom=link_atom
-        mol=gto.Mole()
-        mol.atom=self.geometry
-        if mol.nelectron%2==0:
-            mol.spin=0
-        else:
-            mol.spin=1
-        mol.basis = self.basis
-        mol.build()
-        mf = scf.UHF(mol)
-        mf.verbose = 3
-        mf.max_cycle = 1000
-        mf.scf(dm0=None)
-        self.mf = mf
+class MBE_qmmm(MBE_base):
+    def __init__(self, fragment: Fragment, 
+                 solver: str = "pyscf_rhf", 
+                 isTI: bool = False, 
+                 link_atom: str = "extend"):
+        super().__init__(fragment, solver, isTI, link_atom)
+        self.structure = self.fragment.structure
+        self.mm_charges = self.structure.mm_charges
+        self.mm_coords = self.structure.mm_coords
+        self.mbe_1_qmmm
 
-
-    def get_mbe_energy( self,
-                        order :int =2
-                        ):
-        self.mbe_series=[]
-        if order >5:
-            print('err: order larger than 5 not supported')
-        elif order ==1:
-            if self.mbe_1==None:
-                self.get_mbe_1()
-            mbe_energy=sum(self.mbe_1)
-        elif order ==2:
-            if self.mbe_1==None:
-                self.get_mbe_1()
-            if self.mbe_2==None:
-                self.get_mbe_2()
-            mbe_energy=sum(self.mbe_2)-(len(self.fragment)-2)*sum(self.mbe_1)
-        elif order ==3:
-            if self.mbe_1==None:
-                self.get_mbe_1()
-            if self.mbe_2==None:
-                self.get_mbe_2()
-            if self.mbe_3==None:
-                self.get_mbe_3()
-            mbe_energy=sum(self.mbe_3)-(len(self.fragment)-3)*sum(self.mbe_2)\
-                        +0.5*(len(self.fragment)-2)*(len(self.fragment)-3)*sum(self.mbe_1)
-        elif order ==4:
-            if self.mbe_1==None:
-                self.get_mbe_1()
-            if self.mbe_2==None:
-                self.get_mbe_2()
-            if self.mbe_3==None:
-                self.get_mbe_3()
-            if self.mbe_4==None:
-                self.get_mbe_4()
-            mbe_energy=sum(self.mbe_4)-(len(self.fragment)-4)*sum(self.mbe_3)\
-                        +0.5*(len(self.fragment)-3)*(len(self.fragment)-4)*sum(self.mbe_2)\
-                            -(1/6)*(len(self.fragment)-2)*(len(self.fragment)-3)*(len(self.fragment)-4)*sum(self.mbe_1)
-        elif order ==5:
-            if self.mbe_1==None:
-                self.get_mbe_1()
-            if self.mbe_2==None:
-                self.get_mbe_2()
-            if self.mbe_3==None:
-                self.get_mbe_3()
-            if self.mbe_4==None:
-                self.get_mbe_4()
-            if self.mbe_5==None:
-                self.get_mbe_5()
-            mbe_energy=sum(self.mbe_5)-(len(self.fragment)-5)*sum(self.mbe_4)\
-                        +0.5*(len(self.fragment)-4)*(len(self.fragment)-5)*sum(self.mbe_3)\
-                            -(1/6)*(len(self.fragment)-3)*(len(self.fragment)-4)*(len(self.fragment)-5)*sum(self.mbe_2)\
-                                +(1/24)*(len(self.fragment)-2)*(len(self.fragment)-3)*(len(self.fragment)-4)*(len(self.fragment)-5)*sum(self.mbe_1)
-        self.mbe_energy = mbe_energy
-        return(mbe_energy)
-
-    
-    def get_mbe_1(self):
-        self.mbe_1=[]
-        if self.periodic == True:
-            energy_1 = self.get_energy(self.fragment[0])
+    def get_qmmm_corr(self):
+        if self.mbe_1==None or self.mbe_1 ==[]:
+            self.get_mbe_1()
+        self.mbe_1_qmmm=[]
+        if self.isTI == True:
+            energy_1 = self.get_energy_qmmm(self.fragment.qm_fragment[0])
             for i in range(len(self.fragment)):
-                self.mbe_1.append(energy_1)
+                self.mbe_1_qmmm.append(energy_1)
         else:
             for i in range(len(self.fragment)):
-                self.mbe_1.append(self.get_energy(self.fragment[i]))
-    
-    def get_mbe_2(self):
-        self.mbe_2=[]
-        if self.periodic == True:
-            mbe_2_tmp=[]
-            for i in np.arange(1,len(self.fragment)):
-                atom_list = []
-                for atom_idx in self.fragment[0]:
-                    atom_list.append(atom_idx)
-                for atom_idx in self.fragment[i]:
-                    atom_list.append(atom_idx)
-                mbe_2_tmp.append(self.get_energy(atom_list))
-            for i in range(len(self.fragment)-1):
-                for j in np.arange(i,len(self.fragment)-1):
-                    self.mbe_2.append(mbe_2_tmp[j])
-        else:
-            for atom_list in combinations(self.fragment,2):
-                atom_list_re = []
-                for frag in atom_list:
-                    for atom_idx in frag:
-                        atom_list_re.append(atom_idx)
-                self.mbe_2.append(self.get_energy(atom_list_re))
-    
-    def get_mbe_3(self):
-        self.mbe_3=[]
-        for atom_list in combinations(self.fragment,3):
-            atom_list_re = []
-            for frag in atom_list:
-                for atom_idx in frag:
-                    atom_list_re.append(atom_idx)
-            self.mbe_3.append(self.get_energy(atom_list_re))
+                self.mbe_1_qmmm.append(self.get_energy_qmmm(self.fragment.qm_fragment[i]))
+        E_qmmm_coor = sum(self.mbe_1_qmmm)-sum(self.mbe_1)
+        return E_qmmm_coor
 
-    def get_mbe_4(self):
-        self.mbe_4=[]
-        for atom_list in combinations(self.fragment,4):
-            #print(atom_list)
-            atom_list_re = []
-            for frag in atom_list:
-                for atom_idx in frag:
-                    atom_list_re.append(atom_idx)
-            #print(atom_list_re)
-            self.mbe_4.append(self.get_energy(atom_list_re))
-    def get_mbe_5(self):
-        self.mbe_5=[]
-        for atom_list in combinations(self.fragment,5):
-            #print(atom_list)
-            atom_list_re = []
-            for frag in atom_list:
-                for atom_idx in frag:
-                    atom_list_re.append(atom_idx)
-            #print(atom_list_re)
-            self.mbe_5.append(self.get_energy(atom_list_re))
-    
-    def get_energy(self,atom_list):
-        if self.solver=='uhf':
-            from mqc.solver.mbe_solver import pyscf_uhf
-            energy = pyscf_uhf( geometry=self.geometry,
-                                atom_list=atom_list,
-                                basis = self.basis,
-                                link_atom=self.link_atom)
-        elif self.solver=='rhf':
-            from mqc.solver.mbe_solver import pyscf_rhf
-            energy = pyscf_rhf( geometry=self.geometry,
-                                atom_list=atom_list,
-                                basis = self.basis,
-                                link_atom=self.link_atom)
-        elif self.solver=='vqe':
-            from mqc.solver.mbe_solver import run_vqechem
-            energy=run_vqechem( geometry=self.geometry,
-                                atom_list=atom_list,
-                                basis = self.basis,
-                                link_atom=self.link_atom)
-        elif self.solver == 'ccsd':
-            from mqc.solver.mbe_solver import pyscf_ccsd
-            energy = pyscf_ccsd( geometry=self.geometry,
-                                atom_list=atom_list,
-                                basis = self.basis,
-                                link_atom=self.link_atom)
-        elif self.solver == 'dmrg' or self.solver == 'chemps2' :
-            from mqc.solver.mbe_solver import chemps2
-            energy = chemps2(geometry=self.geometry,
-                            atom_list=atom_list,
-                            basis = self.basis,
-                            link_atom=self.link_atom)
-        elif self.solver =='water_hexamer':
-            from mqc.solver.mbe_solver import run_vqechem_water_hexamer
-            energy = run_vqechem_water_hexamer(geometry=self.geometry,
-                            atom_list=atom_list,
-                            basis = self.basis,
-                            link_atom=self.link_atom)
-        else:
-            print('can not find solver, please check solver option')
-        
+    def get_energy_qmmm(self,atom_list):
+        from mqc.solver import mbe_solver_qmmm
+        energy = getattr(mbe_solver_qmmm,self.solver+"_qmmm")(fragment = self.fragment,
+                                                              atom_list = atom_list, 
+                                                              link_atom = self.link_atom, 
+                                                                )
         return energy
 
 class MBE(object):
@@ -392,19 +229,6 @@ class MBE(object):
             coord_z = coord_z/natom
             frag_center.append((coord_x,coord_y,coord_z))
         return frag_center
-    def get_distance(self,coord1,coord2):
-        d2=(coord2[0]-coord1[0])**2+(coord2[1]-coord1[1])**2+(coord2[2]-coord1[2])**2
-        d= np.sqrt(d2)
-        return d
-
-
-    def get_mbe_energy_approx( self,
-                        n:int, # MBE order
-                        ):
-        calculated_mbe_order = len(self.mbe_series)
-        for i in np.arange(calculated_mbe_order,n):
-            print('Calculating the order %d mbe energy'%(i))
-            self.get_n_th_order_mbe(n=i)
 
     def get_mbe_energy( self,
                         order :int =2
@@ -744,36 +568,6 @@ class MBE(object):
         pool.close()
         pool.join()
         return
-    def get_rhf_binding_energy(self,frag_idx_1,frag_idx_2):
-        from mqc.solver.mbe_solver import pyscf_rhf
-        geometry = self.geometry
-        basis = self.basis
-        qmmm_charges = self.qmmm_charges
-        link_atom = self.link_atom
-        connection = self.connection
-        def _get_rhf_energy(geometry, atom_list ,fragment_charge,qmmm_charges, basis , link_atom,connection):
-            energy = pyscf_rhf( geometry=geometry,
-                            atom_list=atom_list,
-                            fragment_charge = fragment_charge,
-                            qmmm_charges = qmmm_charges,
-                            basis = basis,
-                            link_atom=link_atom,
-                            connection = connection)
-            return energy
-        frag1 = self.fragment[frag_idx_1]
-        frag2 = self.fragment[frag_idx_2]
-        frag_dimer = frag1+frag2
-        frag_charge_1 = self.fragment_charge[frag_idx_1]
-        frag_charge_2 = self.fragment_charge[frag_idx_2]
-        frag_charge_dimer = frag_charge_1 + frag_charge_2
-
-        energy_1 = _get_rhf_energy(geometry,frag1,frag_charge_1,qmmm_charges,basis,link_atom,connection)
-        energy_2 = _get_rhf_energy(geometry,frag2,frag_charge_2,qmmm_charges,basis,link_atom,connection)
-        energy_dimer = _get_rhf_energy(geometry,frag_dimer,frag_charge_dimer,qmmm_charges,basis,link_atom,connection)
-        binding_energy = energy_dimer - energy_1 - energy_2
-        print("RHF binding energy: ",binding_energy)
-
-        return binding_energy
 
     def get_circ(self,args):
         atom_list = args[0]
@@ -1137,179 +931,3 @@ class MBE(object):
         print("time used for calculation:", time_used)
         return energy
 
-class MBE_substract(MBE):
-    def __init__(   self,
-                    geometry: list,
-                    fragment,   # information about atom indices every fragment holds
-                    solver  : str = 'rhf',
-                    basis : str = 'sto_3g',
-                    periodic: bool = False,
-                    link_atom :bool = False,   #used when bond break and need to saturate bonds
-                    qmmm_coords = None,
-                    qmmm_charge_list = None,
-                    save_prefix = None
-                    ):
-        self.geometry = geometry
-        self.fragment = fragment._qm_list
-        self.fragment_charge = fragment.frag_charges
-        assert (len(self.fragment)==len(self.fragment_charge))
-        if link_atom  == True:
-            self.connection = fragment.connection
-            assert (self.connection is not None)
-            assert (len(self.connection)>0 )
-        self.qmmm_charges = fragment._mm_charges
-        self.solver = solver.lower()
-        self.mbe_series = []
-        self.mbe_energy_1=None
-        self.mbe_energy_2=None
-        self.mbe_1=None
-        self.mbe_2=None
-        self.mbe_3=None
-        self.mbe_4=None
-        self.mbe_5=None
-        self.mbe_1_qmmm = None
-        self.basis = basis
-        self.periodic = periodic
-        self.link_atom=link_atom
-        self.save_prefix = save_prefix
-        #self.qmmm_option = qmmm_option
-        if qmmm_coords is not None:
-            self.qmmm_coords = qmmm_coords
-        else:
-            self.qmmm_coords = fragment._mm_coords
-        if qmmm_charge_list is not None:
-            self.qmmm_charge_list = qmmm_charge_list
-        else:
-            self.qmmm_charge_list = fragment._mm_charge
-        mol=gto.Mole()
-        mol.atom=self.geometry
-        if mol.nelectron%2==0:
-            mol.charge=0
-        else:
-            mol.charge=1
-        print('charge of the molecule:', mol.charge)
-        mol.spin = 0
-        mol.basis = self.basis
-        mol.build()
-        if len(mol.atom)>1000:
-            print("too many atoms, skip scf process")
-            self.mf = None
-        else:
-            mf = scf.RHF(mol)
-            mf.verbose = 3
-            mf.max_cycle = 1000
-            mf.scf(dm0=None)
-            self.mf = mf
-        self.pool = None
-        ##prepare folders
-        if save_prefix is not None:
-            if not os.path.exists(self.save_prefix):
-                os.mkdir(self.save_prefix)
-                print("directory made:",self.save_prefix)
-            if not os.path.exists(self.save_prefix+"mbe_1/"):
-                os.mkdir(self.save_prefix+"mbe_1/")
-                print("directory made:",self.save_prefix+"mbe_1/")
-            if not os.path.exists(self.save_prefix+"mbe_2/"):
-                os.mkdir(self.save_prefix+"mbe_2/")
-                print("directory made:",self.save_prefix+"mbe_2/")
-            if (self.qmmm_coords is not None) and (len(self.qmmm_coords)>0):
-                if not os.path.exists(self.save_prefix+"qmmm_mbe_1/"):
-                    os.mkdir(self.save_prefix+"qmmm_mbe_1/")
-                    print("directory made: ",self.save_prefix+"qmmm_mbe_1/")
-
-
-
-def get_ops_pool(geometry, atom_list):
-    '''
-    ''' 
-    print('Generate operator pool first\n')
-    print(atom_list)
-    mol=gto.Mole()
-    mol.atom=[]
-    for i in atom_list:
-        mol.atom.append(geometry[i])
-    mol.basis = 'cc-pvdz'
-    mol.build()    
-
-    if len(atom_list)==6:
-        nacs = 8
-        ncore = 4
-        nvir = 2
-        mo_list = range(ncore,ncore+nacs)
-    else:
-        nacs = 4
-        ncore = 2
-        nvir = 1
-        mo_list = range(ncore,ncore+nacs)
-
-    options = {
-               'vqe' : {'algorithm':'adapt-vqe'},
-               'scf' : {'ncas':nacs,'ncore':ncore,'mo_list':mo_list},
-               'ops' : {'class':'fermionic','spin_sym':'sa'},
-               'ansatz' : {'method':'adapt','form':'unitary','Nu':10},
-               'opt' : {'maxiter':300,'tol':0.01},
-               'oo' : {'basis':'minao','low_level':'mp2','type':'hf','diag':'vqe'}
-              }
-    options = set_options(options)
-    hf = pyscf_interface(mol, options)
-    pool = FermionOps(hf, options['ops'])
-    return pool
-
-def geometry_h_ring(nat:int = 10,  #number of hydrogen atoms in the ring
-                    bondlength : float=1.0
-                    ):
-    geometry = []
-    r = 0.5 * bondlength / np.sin(np.pi/nat)
-    for i in range(nat):
-        theta = i * (2*np.pi/nat)
-        geometry.append(('H', (r*np.cos(theta), r*np.sin(theta), 0)))
-    return geometry
-
-def geometry_h_chain(nat:int = 10,  #number of hydrogen atoms in the ring
-                    bondlength : float=1.0
-                    ):
-    geometry = []
-    for i in range(nat):
-        geometry.append(('H', (0, 0, i*bondlength)))
-    return geometry
-
-def geometry_Be_ring(nat:int = 30,  #number of atoms in the ring
-                    bondlength : float=2.0
-                    ):
-    geometry = []
-    r = 0.5 * bondlength / np.sin(np.pi/nat)
-    for i in range(nat):
-        theta = i * (2*np.pi/nat)
-        geometry.append(('Be', (r*np.cos(theta), r*np.sin(theta), 0)))
-    return geometry
-
-def geometry_carbon_ring(shift=20.0):
-    nat = 18
-    shift =shift*2*np.pi/360
-    R = 7.31/2
-    geometry = []
-    angle = 0.0
-    for i in range( nat // 2 ):
-        geometry.append(('C', (R * np.cos(angle        ), R * np.sin(angle        ), 0.0)))
-        geometry.append(('C', (R * np.cos(angle + shift), R * np.sin(angle + shift), 0.0)))
-        angle += 4.0 * np.pi / nat
-    return geometry
-
-def test():
-    natom = 10
-    geometry = geometry_h_ring(natom)
-    natom_per_fragment=2
-    n_fragment = int(np.ceil(natom/natom_per_fragment))
-    fragment = []
-    for i in range(n_fragment):
-        if (i+1)*natom_per_fragment <=natom:
-            fragment.append(np.arange(i*natom_per_fragment,(i+1)*natom_per_fragment))
-        else:
-            fragment.append(np.arange(i*natom_per_fragment,natom))
-    mbe = MBE(geometry,fragment,solver = 'uhf')
-    return mbe
-    mbe.get_n_th_order_mbe(0)
-    print(mbe.mbe_series)
-    
-#if __name__=="__main__":
-#    test()

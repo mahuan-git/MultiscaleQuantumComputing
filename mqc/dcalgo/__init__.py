@@ -1,2 +1,2 @@
-from .dmet import DMETAlgo
-from .mbe import MBE
+from .dmet import DMET_base
+from .mbe import MBE_base

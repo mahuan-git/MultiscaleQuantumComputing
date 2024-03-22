@@ -1,367 +1,207 @@
 '''
 solvers for mbe
+args for a mbe solver should include:
+    fragment : Fragment class
+    atom list : list, atom index contained in the fragment
+    link_atom : bool 
 '''
-from pyscf import gto, scf, qmmm
-from pyscf.cc import ccsd
-from pyscf.mp.mp2 import MP2
-from itertools import combinations
 import numpy as np
 import os
-import sys
 
-def get_distance(coordinate_1,coordinate_2):
-    assert(len(coordinate_1)==len(coordinate_2)==3)
-    distance = 0
-    for i in range(len(coordinate_1)):
-        distance +=(coordinate_1[i]-coordinate_2[i])**2
-    distance = np.sqrt(distance)
-    return distance
+from pyscf import gto, scf
+from pyscf.cc import ccsd
+from pyscf.mp.mp2 import MP2
 
-def get_connection(geometry):
-    connection=[]
-    natom = len(geometry)
-    for i in range(natom):
-        connection_tmp = []
-        for j in range(natom):
-            if i==j:
-                dist = 2
-            else:
-                dist = get_distance(geometry[i][1],geometry[j][1])
-            if dist < 1.75:
-                connection_tmp.append(j)
-        connection.append(connection_tmp)
-    return connection
+from mqc.tools.tools import int_charge
+from mqc.system.fragment import Fragment
+from mqc.tools.link_atom_tool import add_link_atoms
 
-def get_link_atom_coordinate(   geometry : list,  
-                                end_atoms : list,
-                                add_atom_idx : int,
-                                mode : str = 'extend',
-                                ):
-    '''
-    get the coordinate of the added link atom
-    geometry : the geometry of the original molecule
-    end_atoms: the index of the two atom at the end of a fragment
-    add_atom_idx : the atom index of the added atom.
-    mode : two mode to add a link atom
-    '''   
-    natoms = len(geometry)    
-    end_atoms = list(end_atoms)
-    end_atoms.sort()     
-    bondlength = 1.0
-    link_atom_coordinate = [0,0,0]
-    if mode == 'extend':
-        coordinate_1 = geometry[end_atoms[0]%natoms][1]
-        coordinate_2 = geometry[end_atoms[1]%natoms][1]
-        distance = get_distance(coordinate_1,coordinate_2)
-        delta_x = (coordinate_2[0]-coordinate_1[0])*bondlength/distance
-        delta_y = (coordinate_2[1]-coordinate_1[1])*bondlength/distance
-        delta_z = (coordinate_2[2]-coordinate_1[2])*bondlength/distance
-        #print([delta_x,delta_y,delta_z])
-        if add_atom_idx == (end_atoms[1]+1):
-            link_atom_coordinate[0] = coordinate_2[0] + delta_x
-            link_atom_coordinate[1] = coordinate_2[1] + delta_y
-            link_atom_coordinate[2] = coordinate_2[2] + delta_z
-        elif add_atom_idx == (end_atoms[0]-1):
-            link_atom_coordinate[0] = coordinate_1[0] - delta_x
-            link_atom_coordinate[1] = coordinate_1[1] - delta_y
-            link_atom_coordinate[2] = coordinate_1[2] - delta_z
-        else:
-            print('add atom index does not match, check please')
-            exit()
-
-    elif mode =='origin':
-        '''to be finished later
-        '''
-        exit()
-        pass
-    else:
-        raise ValueError('mode to add the link atom not recognized, please check')
-    
-    return link_atom_coordinate
-
-
-def add_link_atoms_extend( geometry,
-                    atom_list,
-                    mode='extend',
-                    ):
-    '''
-    Do not use link_atom if there is only one atom in the fragment
-    mode can either be extend or origin
-    extend 为附加原子位于两原子的延长线上
-    origin 为附加原子位于分子原有原子的位置附近
-    '''
-    natoms = len(geometry)
-    link_atom_coordinate=[]
-    for atoms in combinations(atom_list,2):
-        if abs(atoms[1]-atoms[0])==1:   ## two selected atoms are neighbours
-            atom_idx_1 = max(atoms)+1
-            atom_idx_2 = min(atoms)-1
-            if atom_idx_1%natoms not in atom_list:
-                coordinate = get_link_atom_coordinate(geometry,atoms,atom_idx_1,mode = mode)
-                link_atom_coordinate.append(coordinate)
-            if atom_idx_2%natoms not in atom_list:
-                coordinate = get_link_atom_coordinate(geometry,atoms,atom_idx_2,mode = mode)
-                link_atom_coordinate.append(coordinate)
-
-        elif abs(atoms[1]-atoms[0])==natoms-1:   ##the two selected atoms are at the head and the tail of the molecule respectively
-            distance = get_distance(geometry[atoms[1]][1],geometry[atoms[0]][1])
-            if distance >3.0:  ## indicate that the head and the tail are not connected
-                pass
-            else:          ## the head and the tail are connected. 
-                atom_idx_1 = 1
-                atom_idx_2 = -2
-                atoms = [-1,0]
-                if (atom_idx_1%natoms) not in atom_list:
-                    coordinate = get_link_atom_coordinate(geometry,atoms,atom_idx_1,mode = mode)
-                    link_atom_coordinate.append(coordinate)
-                if (atom_idx_2%natoms) not in atom_list:
-                    coordinate = get_link_atom_coordinate(geometry,atoms,atom_idx_2,mode = mode)
-                    link_atom_coordinate.append(coordinate)
-        else: ## the two atoms chosen are not connected
-            pass
-    return link_atom_coordinate
-
-def add_link_atoms_origin(  geometry,
-                            atom_list,
-                            connection = None):
-    bondlength = 1.0
-    if connection == None:
-        connection = get_connection(geometry)
-    bondbreak = []
-    for i in atom_list:
-        for j in connection[i]:
-            if not (j in atom_list):
-                bondbreak.append((i,j))
-    #print(bondbreak)
-    link_atom_coordinates = []
-    for bond in bondbreak :
-        coordinate_1 = np.array(geometry[bond[0]][1])
-        coordinate_2 = np.array(geometry[bond[1]][1])
-        dist = get_distance(coordinate_1,coordinate_2)
-        vec = (coordinate_2-coordinate_1)*bondlength/dist
-        coordinate_new = coordinate_1+vec
-        link_atom_coordinates.append(coordinate_new)
-        #print(coordinate_1,coordinate_2,coordinate_new)
-    return link_atom_coordinates
-
-def add_link_atoms( geometry,
-                    atom_list,
-                    mode='origin',
-                    connection = None
-                    ):
-    if mode == 'extend':
-        link_atom_coordinate = add_link_atoms_extend(geometry,atom_list,mode = 'extend')
-    elif mode =='origin':
-        link_atom_coordinate = add_link_atoms_origin(geometry,atom_list,connection = connection)
-    else:
-        print('mode error')
-        exit()
-    return link_atom_coordinate
-
-def pyscf_uhf(  geometry:list,
-                atom_list:list, qmmm_charges:list=None,
-                basis:str='sto-3g', 
-                link_atom : bool = False,
-                connection = None):
+def pyscf_uhf(  fragment :Fragment,
+                atom_list:list,  
+                link_atom : str = "extend",
+                ):
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'extend')
+        mol.atom.append(fragment.qm_geometry[i])
+    if link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = link_atom ,connection=fragment.connection)
         for coordinate in H_atom_coordinates:
             mol.atom.append(('H',coordinate))
-    #print('molecule after link H atoms are added')
-    #print(mol.atom)
+    charge = 0
+    for idx in atom_list:
+        charge += fragment.qm_atom_charge[idx]
+    mol.charge = int_charge(charge=charge, thres = 0.1)
     if mol.nelectron%2==0:
         mol.spin=0
     else:
         mol.spin=1
-    mol.basis = basis
+    mol.basis = fragment.basis
     mol.build()
+
     mf = scf.UHF(mol)
-    mm_coords = []
-    mm_charges = []
-    if qmmm_charges is not None:
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-    mf = qmmm.mm_charge(mf, mm_coords, mm_charges)
     mf.verbose = 3
     mf.max_cycle = 1000
     mf.scf(dm0=None)
     return mf.e_tot
 
-def pyscf_rhf(  geometry:list,
-                atom_list:list,
-                fragment_charge = None,
-                qmmm_charges:list=None,
-                basis:str='sto-3g',
-                link_atom :bool= False,
-                connection = None):
-    assert (connection is not None)
+def pyscf_rhf(  fragment :Fragment,
+                atom_list:list,  
+                link_atom : str = "extend",
+                ):
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin',connection =connection)
+        mol.atom.append(fragment.qm_geometry[i])
+    if link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = link_atom ,connection=fragment.connection)
         for coordinate in H_atom_coordinates:
             mol.atom.append(('H',coordinate))
-    if fragment_charge is not None:
-        mol.charge = fragment_charge
-    #print(mol.atom)
-    #print("charge for fragment:",fragment_charge)
-    mol.basis = basis
-    mol.build()
-    assert (mol.nelectron%2==0)
-    mf = scf.RHF(mol)
-    mm_coords = []
-    mm_charges = []
-    if qmmm_charges is not None:
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-        mf = qmmm.mm_charge(mf, mm_coords, mm_charges)
-    mf.verbose = 3
-    mf.max_cycle = 1000
-    mf.scf(dm0=None)
-
-    if mf.converged == False:
-        print(atom_list)
-        print(mol.atom)
-    return mf.e_tot
-
-def pyscf_rhf_qmmm( geometry:list,
-                atom_list:list,
-                fragment_charge = None,
-                qmmm_charges:list = None,
-                basis:str='sto-3g',
-                link_atom : bool = False,
-                connection = None,
-                qmmm_coords = None,
-                qmmm_charge_list = None):
-    mol=gto.Mole()
-    mol.atom=[]
-    for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin',connection = connection)
-        for coordinate in H_atom_coordinates:
-            mol.atom.append(('H',coordinate))
-    #print('molecule after link H atoms are added')
-    #print(mol.atom)
-    if fragment_charge is not None:
-        mol.charge = fragment_charge
-    mol.spin = 0
-    mol.basis = basis
-    mol.build()
-
-    EE_MB = (qmmm_charges is not None)
-    if EE_MB:
-        mm_coords = []
-        mm_charges = []
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-        #print(mol.atom)
-        #print(mm_coords)
-        #print(mm_charges)
-
-    mf = scf.RHF(mol)
-    mf = qmmm.mm_charge(mf, qmmm_coords, qmmm_charge_list)
-    mf.verbose = 3
-    mf.max_cycle = 1000
-    mf.scf(dm0=None)
-    #ccsolver = ccsd.CCSD( mf )
-    #ccsolver.verbose = 5
-    #ECORR, t1, t2 = ccsolver.ccsd()
-    #ERHF = mf.e_tot
-    #ECCSD = ERHF + ECORR
-    return mf.e_tot
-
-
-def pyscf_dft(  geometry:list,
-                atom_list:list, qmmm_charges:list=None,
-                basis:str='cc-pvdz',
-                link_atom :bool= False,
-                connection = None):
-    mol=gto.Mole()
-    mol.atom=[]
-    for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin')
-        for coordinate in H_atom_coordinates:
-            mol.atom.append(('H',coordinate))
+    charge = 0
+    for idx in atom_list:
+        charge += fragment.qm_atom_charge[idx]
+    mol.charge = int_charge(charge=charge, thres = 0.1)
     if mol.nelectron%2==0:
         mol.spin=0
     else:
         mol.spin=1
-    mol.basis = basis
+    mol.basis = fragment.basis
+    mol.build()
+
+    mf = scf.RHF(mol)
+    mf.verbose = 3
+    mf.max_cycle = 1000
+    mf.scf(dm0=None)
+    return mf.e_tot
+
+def pyscf_dft(  fragment :Fragment,
+                atom_list:list,  
+                link_atom : str = "extend",
+                ):
+    mol=gto.Mole()
+    mol.atom=[]
+    for i in atom_list:
+        mol.atom.append(fragment.qm_geometry[i])
+    if link_atom == True:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = link_atom ,connection=fragment.connection)
+        for coordinate in H_atom_coordinates:
+            mol.atom.append(('H',coordinate))
+    charge = 0
+    for idx in atom_list:
+        charge += fragment.qm_atom_charge[idx]
+    mol.charge = int_charge(charge=charge, thres = 0.1)
+    if mol.nelectron%2==0:
+        mol.spin=0
+    else:
+        mol.spin=1
+    mol.basis = fragment.basis
     mol.build()
     from pyscf import dft
     mf = dft.KS(mol,xc='HYB_GGA_XC_B3LYP')
-    mm_coords = []
-    mm_charges = []
-    if qmmm_charges is not None:
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-        mf = qmmm.mm_charge(mf, mm_coords, mm_charges)
-    mf.verbose = 0
+    mf.verbose = 3
     mf.max_cycle = 1000
-    mf.run()
+    mf.scf(dm0=None)
     return mf.e_tot
 
-
-
-def run_vqechem(geometry:list,
-                atom_list:list, qmmm_charges:list,
-                basis: str ='sto-3g',
-                link_atom : bool = False,
-                connection = None):
+def pyscf_ccsd(  fragment :Fragment,
+                atom_list:list,  
+                link_atom : str = "extend",
+                ):
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'extend')
+        mol.atom.append(fragment.qm_geometry[i])
+    if link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = link_atom ,connection=fragment.connection)
         for coordinate in H_atom_coordinates:
             mol.atom.append(('H',coordinate))
-
-    #if mol.nelectron%2==0:
-    #    mol.spin=0
-    #else:
-    #    mol.spin=1
-    print(mol.atom)
-    assert(mol.nelectron%2 ==0)
-    mol.basis = basis
+    charge = 0
+    for idx in atom_list:
+        charge += fragment.qm_atom_charge[idx]
+    mol.charge = int_charge(charge=charge, thres = 0.1)
+    if mol.nelectron%2==0:
+        mol.spin=0
+    else:
+        mol.spin=1
+    mol.basis = fragment.basis
     mol.build()
-    import sys
-    #sys.path.append('/es01/home/shanghhui/mahuan/program/vqechem/src')
-    from algorithms import run_vqe
-    #from scf_from_pyscf import 
-    import scipy
-    import math 
 
-    mm_coords = []
-    mm_charges = []
-    if qmmm_charges is not None:
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
+    mf = scf.RHF(mol)
+    mf.verbose = 3
+    mf.max_cycle = 1000
+    mf.scf(dm0=None)
+    
+    ccsolver = ccsd.CCSD( mf )
+    ccsolver.verbose = 5
+    ECORR, t1, t2 = ccsolver.ccsd()
+    ERHF = mf.e_tot
+    ECCSD = ERHF + ECORR
+    return ECCSD
 
+def pyscf_mp2(  fragment :Fragment,
+                atom_list:list,  
+                link_atom : str = "extend",
+                ):
+    mol=gto.Mole()
+    mol.atom=[]
+    for i in atom_list:
+        mol.atom.append(fragment.qm_geometry[i])
+    if link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = link_atom ,connection=fragment.connection)
+        for coordinate in H_atom_coordinates:
+            mol.atom.append(('H',coordinate))
+    charge = 0
+    for idx in atom_list:
+        charge += fragment.qm_atom_charge[idx]
+    mol.charge = int_charge(charge=charge, thres = 0.1)
+    if mol.nelectron%2==0:
+        mol.spin=0
+    else:
+        mol.spin=1
+    mol.basis = fragment.basis
+    mol.build()
+
+    mf = scf.RHF(mol)
+    mf.verbose = 3
+    mf.max_cycle = 1000
+    mf.scf(dm0=None)
+
+    mp2 = MP2( mf )
+    mp2.verbose = 0
+    mp2.run()
+
+    return mp2.e_tot
+
+def run_vqechem(  fragment :Fragment,
+                  atom_list:list,  
+                  link_atom : str = "extend",
+                  ):
+    mol=gto.Mole()
+    mol.atom=[]
+    for i in atom_list:
+        mol.atom.append(fragment.qm_geometry[i])
+    if link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = link_atom ,connection=fragment.connection)
+        for coordinate in H_atom_coordinates:
+            mol.atom.append(('H',coordinate))
+    charge = 0
+    for idx in atom_list:
+        charge += fragment.qm_atom_charge[idx]
+    mol.charge = int_charge(charge=charge, thres = 0.1)
+    if mol.nelectron%2==0:
+        mol.spin=0
+    else:
+        mol.spin=1
+    mol.basis = fragment.basis
+    mol.build()
+
+    from algorithms import run_vqe 
+ 
     options = {
                'vqe' : {'algorithm':'adapt-vqe'},
                'scf' : {'ncas':None,'ncore':None,'shift':0.5,
-                        'qmmm_coords':mm_coords,
-                        'qmmm_charges':mm_charges},
+                        'qmmm_coords':fragment.structure.mm_coords,
+                        'qmmm_charges':fragment.structure.mm_charges},
                'ops' : {'class':'fermionic','spin_sym':'sa'},
                'ansatz' : {'method':'adapt','form':'unitary','Nu':1},
                'opt' : {'maxiter':300}
@@ -390,9 +230,7 @@ def run_vqechem_bace(geometry:list,
     mol.basis = basis
     mol.build()
     import sys
-    #sys.path.append('/es01/home/shanghhui/mahuan/program/vqechem/src')
     from VQEChem.algorithms import run_vqe
-    #from scf_from_pyscf import 
     import scipy
     import math 
 
@@ -416,156 +254,6 @@ def run_vqechem_bace(geometry:list,
     ansatz = run_vqe(mol,options)
     return ansatz._energy
 
-
-def pyscf_ccsd( geometry:list,
-                atom_list:list,
-                qmmm_charges:list = None,
-                basis:str='sto-3g',
-                link_atom : bool = False,
-                connection = None):
-    mol=gto.Mole()
-    mol.atom=[]
-    for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin',connection = connection)
-        for coordinate in H_atom_coordinates:
-            mol.atom.append(('H',coordinate))
-    #print('molecule after link H atoms are added')
-    #print(mol.atom)
-    if mol.nelectron%2==0:
-        mol.charge=0
-    elif mol.nelectron%2 ==1:
-        mol.charge=1
-    mol.spin = 0
-    mol.basis = basis
-    mol.build()
-
-    EE_MB = (qmmm_charges is not None)
-    if EE_MB:
-        mm_coords = []
-        mm_charges = []
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-        #print(mol.atom)
-        #print(mm_coords)
-        #print(mm_charges)
-
-    mf = scf.RHF(mol)
-    if EE_MB:
-        mf = qmmm.mm_charge(mf, mm_coords, mm_charges)
-    mf.verbose = 3
-    mf.max_cycle = 1000
-    mf.scf(dm0=None)
-    ccsolver = ccsd.CCSD( mf )
-    ccsolver.verbose = 5
-    ECORR, t1, t2 = ccsolver.ccsd()
-    ERHF = mf.e_tot
-    ECCSD = ERHF + ECORR
-    print("CCSD energy: ", ECCSD)
-    return ECCSD
-
-def pyscf_ccsd_qmmm( geometry:list,
-                atom_list:list,
-                qmmm_charges:list = None,
-                basis:str='sto-3g',
-                link_atom : bool = False,
-                connection = None,
-                qmmm_coords = None,
-                qmmm_charge_list = None):
-    mol=gto.Mole()
-    mol.atom=[]
-    for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin',connection = connection)
-        for coordinate in H_atom_coordinates:
-            mol.atom.append(('H',coordinate))
-    #print('molecule after link H atoms are added')
-    #print(mol.atom)
-    if mol.nelectron%2==0:
-        mol.charge=0
-    elif mol.nelectron%2 ==1:
-        mol.charge=1
-    mol.spin = 0
-    mol.basis = basis
-    mol.build()
-
-    EE_MB = (qmmm_charges is not None)
-    if EE_MB:
-        mm_coords = []
-        mm_charges = []
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-        #print(mol.atom)
-        #print(mm_coords)
-        #print(mm_charges)
-
-    mf = scf.RHF(mol)
-    mf = qmmm.mm_charge(mf, qmmm_coords, qmmm_charge_list)
-    mf.verbose = 3
-    mf.max_cycle = 1000
-    mf.scf(dm0=None)
-    ccsolver = ccsd.CCSD( mf )
-    ccsolver.verbose = 5
-    ECORR, t1, t2 = ccsolver.ccsd()
-    ERHF = mf.e_tot
-    ECCSD = ERHF + ECORR
-    return ECCSD
-
-
-def pyscf_mp2( geometry:list,
-                atom_list:list,
-                qmmm_charges:list = None,
-                basis:str='sto-3g',
-                link_atom : bool = False,
-                connection = None):
-    mol=gto.Mole()
-    mol.atom=[]
-    for i in atom_list:
-        mol.atom.append(geometry[i])
-    if link_atom == True:
-        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin',connection = connection)
-        for coordinate in H_atom_coordinates:
-            mol.atom.append(('H',coordinate))
-    #print('molecule after link H atoms are added')
-    #print(mol.atom)
-    if mol.nelectron%2==0:
-        mol.spin=0
-    else:
-        mol.spin=1
-    mol.basis = basis
-    mol.build()
-
-    EE_MB = (qmmm_charges is not None)
-    if EE_MB:
-        mm_coords = []
-        mm_charges = []
-        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
-        for i in mm_list:
-            mm_coords.append(geometry[i][1])
-            mm_charges.append(qmmm_charges[i])
-        #print(mol.atom)
-        #print(mm_coords)
-        #print(mm_charges)
-
-    mf = scf.RHF(mol)
-    if EE_MB:
-        mf = qmmm.mm_charge(mf, mm_coords, mm_charges)
-    mf.verbose = 3
-    mf.max_cycle = 1000
-    mf.scf(dm0=None)
-    mp2 = MP2( mf )
-    mp2.verbose = 0
-    #ECORR, t1, t2 = ccsolver.ccsd()
-    mp2.run()
-    #ERHF = mf.e_tot
-    #ECCSD = ERHF + ECORR
-    return mp2.e_tot
 
 def get_circ_protein(geometry:list,
                 atom_list:list,
@@ -628,7 +316,6 @@ def get_circ_protein(geometry:list,
                'oo' : {'basis':'minao','low_level':'mp2','type':'hf','diag':'get_circ'},
                'file': {'save_directory':save_directory}
               }
-    #ansatz = run_vqe(mol,options)
     E, dE1, dE2 = vqe_oo(mol, options, nvir)
 
     return E+dE1
@@ -659,11 +346,8 @@ def run_sci_protein(geometry:list,
     mol.build()
     assert (mol.nelectron%2 == 0)
     nocc = mol.nelectron//2
-    #import sys
-    #sys.path.append('/es01/home/shanghhui/mahuan/program/vqechem/src')
     from algorithms import run_vqe
-    from VQEChem.orbital_optimize import vqe_oo
-    #from scf_from_pyscf import 
+    from VQEChem.orbital_optimize import vqe_oo 
     import scipy
     import math
 

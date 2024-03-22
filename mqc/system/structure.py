@@ -1,5 +1,5 @@
 import numpy as np
-from mqc.tools.iotools import read_poscar, read_mol_structure
+from mqc.tools.iotools import read_poscar, read_mol_structure, read_mol2_structure
 from mqc.tools.tools import get_distance
 
 
@@ -62,6 +62,7 @@ class Structure(object):
         self.get_qm_atom_list()
         self.set_qm_geometry()
         self.get_mm_atom_list()
+        self.get_mm_charge_mm_coords()
 
     def read_geometry(self):
         if self.file_name is not None:
@@ -119,7 +120,7 @@ class Structure(object):
             self.mm_coords.append(self.geometry[idx][1])
 
     
-    def print_strucyure(self,file_format = None):
+    def print_structure(self,file_format = None):
         '''TBD'''
         pass
 
@@ -131,8 +132,6 @@ class Structure(object):
             GV_file.write(geometry[i][0]+'    '+str(geometry[i][1][0])+'   '+str(geometry[i][1][1])+'   '+str(geometry[i][1][2])+'   \n')
         GV_file.close()
     
-
-
 class Structure_Al(Structure):
     def __init__(self,geometry = None,file_name = None,file_format = None, cluster_size = None):
         super().__init__(geometry=geometry, file_name=file_name, file_format=file_format)
@@ -190,6 +189,61 @@ class Structure_Al(Structure):
 
 class Structure_protein(Structure):
     '''structure class for proteins. To be finished'''
-    def structure_initialize():
+    def __init__(self, geometry=None, file_name=None, file_format=None):
+        super().__init__(geometry, file_name, file_format)
+        self._res = None
+        self._res_names = None
+        self._protein_geometry = None
+        self._bonds = None
+        self._bond_types = None
+        self._atom_type = None
+        self._atom_label = None
+        self._atom_charge = None
+        self._res_charge = None
+        self._ligand_geometry = None
+        self._ligand_charge = None
+        self._ligand_atom_idx = None
+        self._mm_coords = None
+        self._mm_charge = None
+
+    def read_geometry(self):
+        res,res_names, protein_geometry, bonds, bond_types,atom_type,atom_label,\
+            atom_charge,res_charge,ligand_geometry,ligand_atom_charge,ligand_atom_idx,mm_coords,mm_charges=read_mol2_structure(self.file_name)
+        self.input_geometry = None 
+        self.geometry = protein_geometry + ligand_geometry
+        self._protein_geometry = protein_geometry
+        self._res = res
+        self._res_names = res_names
+        self._bonds = bonds
+        self._bond_types = bond_types
+        self._atom_type = atom_type
+        self._atom_label = atom_label
+        self._atom_charge = atom_charge
+        for i in range(len(res_charge)):
+            if res_charge[i]<0.1 and res_charge[i]>-0.1:
+                res_charge[i]=0
+            elif res_charge[i]>0.9 and res_charge[i]<1.1:
+                res_charge[i]=1
+            elif res_charge[i]<-0.9 and res_charge[i]>-1.1:
+                res_charge[i]=-1
+            else:
+                pass
+        self._res_charge = res_charge
+        self._ligand_geometry = ligand_geometry
+        self._ligand_charge = ligand_atom_charge
+        self._ligand_atom_idx = ligand_atom_idx
+        self._mm_coords = mm_coords
+        self._mm_charges = mm_charges
+    
+    def structure_initialize(self):
         pass
         return
+    
+    def get_mm_atom_list(self):
+        pass
+        return
+    
+    def get_mm_charge_mm_coords(self):
+        self.mm_coords = self._mm_coords
+        self.mm_charges = self._mm_charges
+    
