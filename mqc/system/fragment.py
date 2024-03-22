@@ -140,7 +140,7 @@ class SimpleFragment(Fragment):
             frag = np.arange(self.natom_per_fragment*i,self.natom_per_fragment*i+self.natom_per_fragment)
             self.qm_fragment.append(list(frag))
 
-class Fragment_Al_MBE(Fragment):
+class Fragment_Metal_Mol_MBE(Fragment):
     def get_qm_fragment(self, qm_fragment=None):
         if qm_fragment is not None:
             return super().get_qm_fragment(qm_fragment)
@@ -150,14 +150,14 @@ class Fragment_Al_MBE(Fragment):
             substrate_list = []
             molecule_list = []
             for idx in range(len(self.qm_geometry)):
-                if self.qm_geometry[idx][0] =="Al":
+                if self.qm_geometry[idx][0] ==self.structure._metal_name:
                     substrate_list.append(idx)
                 else:
                     molecule_list.append(idx)
             self.qm_fragment.append(substrate_list)
             self.qm_fragment.append(molecule_list)
 
-class Fragment_Al_DMET(Fragment):
+class Fragment_Metal_Mol_DMET(Fragment):
     def __init__(self, structure: Structure, basis='sto-3g', charge=0, restricted=True, run_ccsd=False):
         super().__init__(structure, basis, charge, restricted, run_ccsd)
 

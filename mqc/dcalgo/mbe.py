@@ -3,33 +3,36 @@ Many Body Expansion
 '''
 import numpy as np
 from itertools import combinations
-from pyscf import gto, scf
 from mqc.system.fragment import Fragment
 from mqc.tools.tools import get_distance
+from .option import mbe_option
 
 class MBE_base(object):
     def __init__(   self, 
                     fragment:Fragment,
-                    solver : str = "pyscf_rhf",
-                    isTI: bool = False,
-                    link_atom: str = "extend"
+                    mbe_option: mbe_option
                     ):
-        assert link_atom in ["extend","origin",None], "link atom mode not supported"
-        assert solver in ["pyscf_uhf","pyscf_rhf"] , "solver not supported"
         self.fragment = fragment
+        self.mbe_option =mbe_option
+        self.structure = self.fragment.structure
         self.qm_fragment = fragment.qm_fragment
         self.num_frag = len(self.qm_fragment)
-        self.solver = solver.lower()
+        self.solver = mbe_option.solver.lower()
 
         self.mbe_1 = None
         self.mbe_2 = None
         self.mbe_3 = None
-        self.isTI = isTI
-        self.link_atom = link_atom
+        self.isTI = mbe_option.isTI
+        self.link_atom = mbe_option.link_atom
+
+        self.mbe_option.qmmm_charges = self.structure.mm_charges
+        self.mbe_option.qmmm_coords = self.structure.mm_coords
 
         self.mbe_energy = None
 
+
     def get_mbe_1(self):
+        self.mbe_option.ncas = self.mbe_option.ncas1
         self.mbe_1=[]
         if self.isTI == True:
             energy_1 = self.get_energy(self.qm_fragment[0])
@@ -40,6 +43,7 @@ class MBE_base(object):
                 self.mbe_1.append(self.get_energy(self.qm_fragment[i]))
     
     def get_mbe_2(self):
+        self.mbe_option.ncas = self.mbe_option.ncas2
         self.mbe_2=[]
         if self.isTI == True:
             mbe_2_tmp=[]
@@ -62,6 +66,7 @@ class MBE_base(object):
                 self.mbe_2.append(self.get_energy(atom_list_re))
     
     def get_mbe_3(self):
+        self.mbe_option.ncas = self.mbe_option.ncas3
         self.mbe_3=[]
         for atom_list in combinations(self.qm_fragment,3):
             atom_list_re = []
@@ -70,7 +75,7 @@ class MBE_base(object):
                     atom_list_re.append(atom_idx)
             self.mbe_3.append(self.get_energy(atom_list_re))
 
-    def get_mbe_energy( self,  order :int =2 ):
+    def get_mbe_energy( self,  order :int = 2 ):
         from scipy.special import comb
         if order >3:
             raise ValueError('mbe order larger than 3 not supported')
@@ -87,47 +92,41 @@ class MBE_base(object):
     def get_energy(self,atom_list):
         from mqc.solver import mbe_solver
         energy = getattr(mbe_solver,self.solver)(fragment = self.fragment,
-                                                 atom_list = atom_list, 
-                                                 link_atom = self.link_atom, 
+                                                 atom_list = atom_list,  
+                                                 option = self.mbe_option 
                                                  )
         return energy
 
 class MBE_qmmm(MBE_base):
-    def __init__(self, fragment: Fragment, 
-                 solver: str = "pyscf_rhf", 
-                 isTI: bool = False, 
-                 link_atom: str = "extend"):
-        super().__init__(fragment, solver, isTI, link_atom)
-        self.structure = self.fragment.structure
-        self.mm_charges = self.structure.mm_charges
-        self.mm_coords = self.structure.mm_coords
-        self.mbe_1_qmmm
+    def __init__(self, fragment: Fragment, mbe_option: mbe_option):
+        super().__init__(fragment, mbe_option)
 
     def get_qmmm_corr(self):
+        self.mbe_option.ncas = self.mbe_option.ncas1
         if self.mbe_1==None or self.mbe_1 ==[]:
             self.get_mbe_1()
-        self.mbe_1_qmmm=[]
+        mbe_1_qmmm=[]
         if self.isTI == True:
             energy_1 = self.get_energy_qmmm(self.fragment.qm_fragment[0])
             for i in range(len(self.fragment)):
-                self.mbe_1_qmmm.append(energy_1)
+                mbe_1_qmmm.append(energy_1)
         else:
             for i in range(len(self.fragment)):
-                self.mbe_1_qmmm.append(self.get_energy_qmmm(self.fragment.qm_fragment[i]))
-        E_qmmm_coor = sum(self.mbe_1_qmmm)-sum(self.mbe_1)
+                mbe_1_qmmm.append(self.get_energy_qmmm(self.fragment.qm_fragment[i]))
+        E_qmmm_coor = sum(mbe_1_qmmm)-sum(self.mbe_1)
         return E_qmmm_coor
 
     def get_energy_qmmm(self,atom_list):
         from mqc.solver import mbe_solver_qmmm
         energy = getattr(mbe_solver_qmmm,self.solver+"_qmmm")(fragment = self.fragment,
                                                               atom_list = atom_list, 
-                                                              link_atom = self.link_atom, 
+                                                              option = self.mbe_option 
                                                                 )
         return energy
 
 class MBE_protein(MBE_qmmm):
-    def __init__(self, fragment: Fragment, solver: str = "pyscf_rhf", isTI: bool = False, link_atom: str = "extend"):
-        super().__init__(fragment, solver, isTI, link_atom)
+    def __init__(self, fragment: Fragment, mbe_option: mbe_option):
+        super().__init__(fragment, mbe_option)
         self.fragment_center = self.get_fragment_center()
 
 

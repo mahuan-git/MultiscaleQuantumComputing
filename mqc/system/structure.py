@@ -132,9 +132,10 @@ class Structure(object):
             GV_file.write(geometry[i][0]+'    '+str(geometry[i][1][0])+'   '+str(geometry[i][1][1])+'   '+str(geometry[i][1][2])+'   \n')
         GV_file.close()
     
-class Structure_Al(Structure):
-    def __init__(self,geometry = None,file_name = None,file_format = None, cluster_size = None):
+class Structure_Metal_Mol(Structure):
+    def __init__(self,geometry = None,file_name = None,file_format = None, metal_name = "Al",cluster_size = None):
         super().__init__(geometry=geometry, file_name=file_name, file_format=file_format)
+        self._metal_name = metal_name
         self._molecule = []
         self._molecule_bonding_atom = None
         self._substrate = []
@@ -155,7 +156,7 @@ class Structure_Al(Structure):
     
     def _devide_molecule_substrate(self):
         for atom in self.input_geometry:
-            if atom[0] == "Al":
+            if atom[0] == self._metal_name:
                 self._substrate.append(atom)
             else:
                 self._molecule.append(atom)
