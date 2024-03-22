@@ -1,6 +1,5 @@
 import numpy as np
 import scipy.linalg as la
-import pyscf.scf.hf
 
 def Frac2Real(cellsize, coord):
     assert cellsize.ndim == 2 and cellsize.shape[0] == cellsize.shape[1]
