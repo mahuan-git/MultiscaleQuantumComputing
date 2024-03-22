@@ -23,11 +23,12 @@ def int_charge(charge,thres):
     assert abs(int_charge-charge) < thres, "Bad charge input"
     return int_charge
 
-def get_ops_pool(geometry, atom_list):
+def get_ops_pool(geometry, atom_list,):
     from pyscf import gto
-    from scf_from_pyscf import pyscf_interface
-    from fermion_operator import FermionOps
-    from set_options import set_options
+    from vqechem.scf_from_pyscf import pyscf_interface
+    from vqechem.fermion_operator import FermionOps
+    from vqechem.set_options import set_options
+    from mqc.dcalgo.option import mbe_option
     '''
     ''' 
     print('Generate operator pool first\n')

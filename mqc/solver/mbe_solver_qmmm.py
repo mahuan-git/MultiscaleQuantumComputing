@@ -176,7 +176,7 @@ def pyscf_mp2_qmmm(  fragment :Fragment,
 
     return mp2.e_tot
 
-def vqechem(    fragment :Fragment,
+def vqechem_qmmm(    fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
                 ):
@@ -211,7 +211,7 @@ def vqechem(    fragment :Fragment,
     ansatz = run_vqe(mol,vqe_options)
     return ansatz._energy
 
-def vqe_oo(    fragment :Fragment,
+def vqe_oo_qmmm(    fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
                 ):
@@ -244,4 +244,4 @@ def vqe_oo(    fragment :Fragment,
     option_cp.update(ncore = ncore,mo_list=mo_list)
     vqe_options = option_cp.make_vqe_options()
     E, dE1, dE2 = vqe_oo(mol, vqe_options, nvir)
-    return E+dE1    
+    return E+dE1   

@@ -1,6 +1,7 @@
 '''
 Many Body Expansion 
 '''
+import os
 import numpy as np
 from itertools import combinations
 from mqc.system.fragment import Fragment
@@ -29,7 +30,27 @@ class MBE_base(object):
         self.mbe_option.qmmm_coords = self.structure.mm_coords
 
         self.mbe_energy = None
-
+        
+        if self.mbe_option.diag == "get_ham":
+            assert self.mbe_option.save_root is not None, "save root should be given when choose to save hamiltonians."
+            if self.mbe_option.save_root[-1] != '/':
+                self.mbe_option.save_root += '/'
+            if not os.path.exists(self.mbe_option.save_root):
+                os.mkdir(self.mbe_option.save_root)
+                print("directory made:",self.mbe_option.save_root)
+            if not os.path.exists(self.mbe_option.save_root+"mbe_1/"):
+                os.mkdir(self.mbe_option.save_root+"mbe_1/")
+                print("directory made:",self.mbe_option.save_root+"mbe_1/")
+            if not os.path.exists(self.mbe_option.save_root+"mbe_2/"):
+                os.mkdir(self.mbe_option.save_root+"mbe_2/")
+                print("directory made:",self.mbe_option.save_root+"mbe_2/")
+            if not os.path.exists(self.mbe_option.save_root+"mbe_2_info/"):
+                os.mkdir(self.mbe_option.save_root+"mbe_2_info/")
+                print("directory made:",self.mbe_option.save_root+"mbe_2_info/")
+            if (self.mbe_option.qmmm_coords is not None) and (len(self.mbe_option.qmmm_coords)>0):
+                if not os.path.exists(self.mbe_option.save_root+"qmmm_mbe_1/"):
+                    os.mkdir(self.mbe_option.save_root+"qmmm_mbe_1/")
+                    print("directory made: ",self.mbe_option.save_root+"qmmm_mbe_1/")
 
     def get_mbe_1(self):
         self.mbe_option.ncas = self.mbe_option.ncas1
@@ -91,16 +112,13 @@ class MBE_base(object):
         
     def get_energy(self,atom_list):
         from mqc.solver import mbe_solver
+        assert self.solver in ["pyscf_uhf","pyscf_rhf","pyscf_dft","pyscf_ccsd","pyscf_mp2","vqechem","vqe_oo"]
         energy = getattr(mbe_solver,self.solver)(fragment = self.fragment,
                                                  atom_list = atom_list,  
                                                  option = self.mbe_option 
                                                  )
         return energy
-
-class MBE_qmmm(MBE_base):
-    def __init__(self, fragment: Fragment, mbe_option: mbe_option):
-        super().__init__(fragment, mbe_option)
-
+    
     def get_qmmm_corr(self):
         self.mbe_option.ncas = self.mbe_option.ncas1
         if self.mbe_1==None or self.mbe_1 ==[]:
@@ -124,7 +142,8 @@ class MBE_qmmm(MBE_base):
                                                                 )
         return energy
 
-class MBE_protein(MBE_qmmm):
+
+class MBE_protein(MBE_base):
     def __init__(self, fragment: Fragment, mbe_option: mbe_option):
         super().__init__(fragment, mbe_option)
         self.fragment_center = self.get_fragment_center()
@@ -204,8 +223,8 @@ class MBE_protein(MBE_qmmm):
                 for atom_idx in self.fragment[i]:
                     atom_list.append(atom_idx)
                 fragment_charge = self.fragment_charge[0]+self.fragment_charge[i]
-                if self.save_prefix is not None:
-                    save_directory = self.save_prefix + "mbe_2/"+"params_"+str(i)
+                if self.mbe_option.save_root is not None:
+                    save_directory = self.mbe_option.save_root + "mbe_2/"+"params_"+str(i)
                 else:
                     save_directory = None
                 mbe_2_tmp.append(self.get_energy(atom_list,fragment_charge,save_directory = save_directory,ncas_occ = ncas_occ,ncas_vir = ncas_vir))
@@ -241,8 +260,8 @@ class MBE_protein(MBE_qmmm):
                         print('  %d dimer calculation\n' %idx)
                         atom_list_re = self.fragment[frag_idx[0]]+self.fragment[frag_idx[1]]
                         fragment_charge = self.fragment_charge[frag_idx[0]]+self.fragment_charge[frag_idx[1]]
-                        if self.save_prefix is not None:
-                            save_directory = self.save_prefix +"mbe_2/"+"params_"+str(idx)
+                        if self.mbe_option.save_root is not None:
+                            save_directory = self.mbe_option.save_root +"mbe_2/"+"params_"+str(idx)
                         else:
                             save_directory = None
                         self.mbe_2.append(self.get_energy(atom_list_re,fragment_charge,save_directory = save_directory,ncas_occ = ncas_occ,ncas_vir = ncas_vir))

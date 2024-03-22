@@ -51,6 +51,7 @@ class mbe_option(object):
         self.diag = "vqe"
 
         ## file
+        self.save_root = None
         self.save_directory = None
         
         self.vqe_options = None

@@ -1,6 +1,66 @@
 import numpy as np
 import copy
 
+
+
+def get_circ_protein(geometry:list,
+                atom_list:list,
+                fragment_charge = None,
+                qmmm_charges:list = None,
+                pool = None,
+                basis: str ='cc-pvdz',
+                link_atom : bool = False,
+                connection = None,
+                save_directory = None,
+                ncas_occ = 4,
+                ncas_vir = 4):
+    mol=gto.Mole()
+    mol.atom=[]
+    for i in atom_list:
+        mol.atom.append(geometry[i])
+    if link_atom == True:
+        H_atom_coordinates = add_link_atoms(geometry,atom_list,mode = 'origin',connection =connection)
+        for coordinate in H_atom_coordinates:
+            mol.atom.append(('H',coordinate))
+
+    if fragment_charge is not None:
+        mol.charge = fragment_charge
+    mol.basis = basis
+    mol.build()
+    assert (mol.nelectron%2 == 0)
+    nocc = mol.nelectron//2
+    ncas_occ = ncas_occ
+    ncas_vir = ncas_vir
+    ncas = ncas_occ+ncas_vir
+    ncore = nocc - ncas_occ
+    nvir = ncas_vir
+    mo_list = range(ncore,ncore+ncas)
+    mm_coords = None
+    mm_charges = None
+    if qmmm_charges is not None:
+        mm_coords = []
+        mm_charges = []
+        mm_list = [x for x in np.arange(len(geometry)) if x not in atom_list]
+        for i in mm_list:
+            mm_coords.append(geometry[i][1])
+            mm_charges.append(qmmm_charges[i])
+
+    options = {
+               'vqe' : {'algorithm':'adapt-vqe'},
+               'scf' : {'ncas':ncas,'ncore':ncore,'mo_list':mo_list,
+                        'shift':0.5,'qmmm_coords':mm_coords,
+                        'qmmm_charges':mm_charges},
+               'ops' : {'class':'fermionic','spin_sym':'sa','ops_pool':pool},
+               'ansatz' : {'method':'adapt','form':'unitary','Nu':10},
+               'opt' : {'maxiter':300,'tol':0.01},
+               'oo' : {'basis':'minao','low_level':'mp2','type':'hf','diag':'get_circ'},
+               'file': {'save_directory':save_directory}
+              }
+    E, dE1, dE2 = vqe_oo(mol, options, nvir)
+
+    return E+dE1
+
+
 class Fragment_protein_old():
     
     ''' Fragment class especially for proteins.
