@@ -1,5 +1,5 @@
 import localintegrals
-import dmet as dmet
+import mqc.third_party.qcdmet as dmet
 import numpy as np
 from mqc.system.fragment import Fragment
 
@@ -14,13 +14,13 @@ class DMET_Base(object):
         self.isTI = isTI  #Transition Invariant or not.
         self.method = method
         self.SCmethod = SCmethod
-        self.dmet_iter = None
+        self.mydmet = None
         self.energy = None
 
     def build(self):
         self.get_localintegral()
         self.get_impurity_clusters()
-        self.dmet_iter = dmet.dmet( self.localint, self.impurity_clusters, self.isTI, self.method, self.SCmethod)
+        self.mydmet = dmet.MyDMET( self.localint, self.impurity_clusters, self.isTI, self.method, self.SCmethod)
 
     def get_localintegral(self, method = "meta_lowdin", molden_name = "tmp.molden"):
         self.localint = localintegrals.localintegrals( self.mf, range( self.mol.nao_nr() ), method )
@@ -54,4 +54,5 @@ class DMET_Base(object):
             self.impurity_clusters.append( impurities )
             
     def run(self):
-        self.energy=self.dmet_iter.doselfconsistent()
+        self.energy=self.mydmet.doselfconsistent()
+        return self.energy
