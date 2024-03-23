@@ -1,6 +1,7 @@
-import numpy as np
-from mqc.tools.tools import Frac2Real, Real2Frac
 import re
+import numpy as np
+from mqc.tools.tools import Frac2Real
+from openbabel import pybel
 
 def read_poscar(fname="POSCAR"):
     """
