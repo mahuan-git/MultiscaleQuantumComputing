@@ -123,6 +123,7 @@ class Fragment(object):
             connection.append(connection_tmp)
         self.connection = connection
 
+
 class SimpleFragment(Fragment):
     ''' fragments for simple systems such as hydrogen chain. Devide fragments based on number of atoms in per fragment.
     '''  
@@ -242,7 +243,7 @@ class Fragment_protein(Fragment):
         self._R_group = R_group
         return C_side, N_side, core_carbon, R_group    
 
-    def get_fragment_for_residues(self):
+    def get_fragment_for_residues(self) -> list:
         fragment = [[]for i in range(len(self._core_carbon))]
         for i in range(len(self._N_side)):
             N_idx = self._N_side[i][0]
@@ -261,7 +262,7 @@ class Fragment_protein(Fragment):
         self.qm_fragment = fragment
         return fragment
 
-    def add_fragment_for_ligand(self,atom_list = None):
+    def add_fragment_for_ligand(self,atom_list = None) -> list:
         if atom_list ==None:
             ##give a default ligand fragment
             atom_list=[

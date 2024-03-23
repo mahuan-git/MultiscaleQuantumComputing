@@ -1,6 +1,8 @@
 import numpy as np
-from mqc.tools.iotools import read_poscar, read_mol_structure, read_mol2_structure
+from mqc.tools.iotools import read_mol2_structure
 from mqc.tools.tools import get_distance
+from openbabel import openbabel
+from openbabel import pybel
 
 
 def hydrogen_ring(natom = 10,bondlength = 1.0):
@@ -11,6 +13,7 @@ def hydrogen_ring(natom = 10,bondlength = 1.0):
         geometry.append(('H', (r*np.cos(theta), r*np.sin(theta), 0)))
     return geometry
 
+
 def hydrogen_chain(natom:int = 10,  
                      bondlength : float=1.0
                      ):
@@ -18,7 +21,8 @@ def hydrogen_chain(natom:int = 10,
     for i in range(natom):
         geometry.append(('H', (0, 0, i*bondlength)))
     return geometry
- 
+
+
 def Be_ring(natom:int = 30,  
                      bondlength : float=2.0
                      ):
@@ -28,7 +32,8 @@ def Be_ring(natom:int = 30,
         theta = i * (2*np.pi/natom)
         geometry.append(('Be', (r*np.cos(theta), r*np.sin(theta), 0)))
     return geometry
- 
+
+
 def carbon_ring(shift=20.0):
     nat = 18
     shift =shift*2*np.pi/360
@@ -41,6 +46,7 @@ def carbon_ring(shift=20.0):
         angle += 4.0 * np.pi / nat
     return geometry
 
+
 class Structure(object):
     def __init__(self,geometry = None,file_name = None,file_format = None):
         
@@ -48,13 +54,17 @@ class Structure(object):
         self.geometry =geometry
         self.file_name = file_name
         self.file_format = file_format
-        
+
         self.qm_atom_list = None
         self.qm_geometry = None
 
         self.mm_atom_list = None
         self.mm_coords = None
         self.mm_charges = None
+        
+        self.obmol = None
+        self.pymol = None
+        self.obconv = None
 
     def build(self):
         self.read_geometry()
@@ -66,16 +76,23 @@ class Structure(object):
 
     def read_geometry(self):
         if self.file_name is not None:
-            if self.file_format == "POSCAR":
-                self.input_geometry = read_poscar(fname=self.file_name)
-                self.geometry = self.input_geometry
-            elif self.file_format == "mol":
-                self.input_geometry= read_mol_structure(fname = self.file_name)
-                self.geometry = self.input_geometry
-        else:
-            pass
-        
-        assert self.geometry is not None, "Either geometry or file path should be given"
+            self.input_geometry = []
+            self.obmol = openbabel.OBMol()
+            self.obconv = openbabel.OBConversion()
+            self.obconv.SetInAndOutFormats(self.file_format,None)
+            self.obconv.ReadFile(self.obmol, self.file_name)
+            self.obmol.AddHydrogens()
+            self.pymol = pybel.Molecule(self.obmol)
+            for atom in self.pymol.atoms:
+                self.input_geometry.append((atom.type,atom.coords))
+            self.geometry = self.input_geometry
+        return self.obmol
+
+    def write_geometry(self,out_put_file_name="out_file.mol2",out_put_file_format="mol2"):
+        if self.obmol == None or self.obconv ==None:
+            self.read_geometry()
+        self.obconv.SetInAndOutFormats(self.file_format,out_put_file_format)
+        self.obconv.WriteFile(self.obmol, out_put_file_name)
     
     def structure_initialize(self):
         '''Initialize the given structure. No initialization is applied here'''
@@ -99,7 +116,6 @@ class Structure(object):
             if idx in self.qm_atom_list:
                 self.qm_geometry.append(self.geometry[idx])
 
-
     def get_mm_atom_list(self):
         self.mm_atom_list = []
         for idx in range(len(self.geometry)):
@@ -119,18 +135,6 @@ class Structure(object):
             self.mm_charges.append(chg[idx])
             self.mm_coords.append(self.geometry[idx][1])
 
-    
-    def print_structure(self,file_format = None):
-        '''TBD'''
-        pass
-
-    def print_structure_for_Gauss_View(self,file_name = "structure.com"):
-        geometry = self.geometry
-        GV_file = open(file_name,'w+')
-        GV_file.write("# HF/3-21G** opt pop=full gfprint\n\nTitle: Created by Jmol version 14.31.60  2021-10-18 20:23\n\n0 1\n")
-        for i in range(len(geometry)):
-            GV_file.write(geometry[i][0]+'    '+str(geometry[i][1][0])+'   '+str(geometry[i][1][1])+'   '+str(geometry[i][1][2])+'   \n')
-        GV_file.close()
     
 class Structure_Metal_Mol(Structure):
     def __init__(self,geometry = None,file_name = None,file_format = None, metal_name = "Al",cluster_size = None):
@@ -187,6 +191,12 @@ class Structure_Metal_Mol(Structure):
                 self._bonding_atom_index.update({"mol":idx})
             if np.isclose(self.geometry[idx][1]-self._substrate_bonding_atom[1],0).all():
                 self._bonding_atom_index.update({"al":idx})               
+
+
+class Structure_Al(Structure_Metal_Mol):
+    def __init__(self, geometry=None, file_name=None, file_format=None, cluster_size=None):
+        super().__init__(geometry, file_name, file_format, "Al", cluster_size)
+
 
 class Structure_protein(Structure):
     '''structure class for proteins. To be finished'''

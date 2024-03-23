@@ -243,5 +243,5 @@ def vqe_oo_qmmm(    fragment :Fragment,
     mo_list = range(ncore,ncore+option.ncas)    
     option_cp.update(ncore = ncore,mo_list=mo_list)
     vqe_options = option_cp.make_vqe_options()
-    E, dE1, dE2 = vqe_oo(mol, vqe_options, nvir)
-    return E+dE1   
+    e, de1, de2 = vqe_oo(mol, vqe_options, nvir)
+    return e+de1   

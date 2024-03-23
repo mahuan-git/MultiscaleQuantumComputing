@@ -23,7 +23,7 @@ import copy
 def pyscf_uhf(  fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
-                ):
+                ) -> float:
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
@@ -52,7 +52,7 @@ def pyscf_uhf(  fragment :Fragment,
 def pyscf_rhf(  fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
-                ):
+                ) -> float:
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
@@ -81,7 +81,7 @@ def pyscf_rhf(  fragment :Fragment,
 def pyscf_dft(  fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
-                ):
+                ) -> float:
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
@@ -110,7 +110,7 @@ def pyscf_dft(  fragment :Fragment,
 def pyscf_ccsd( fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
-                ):
+                ) -> float:
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
@@ -145,7 +145,7 @@ def pyscf_ccsd( fragment :Fragment,
 def pyscf_mp2(  fragment :Fragment,
                 atom_list:list, 
                 option: mbe_option
-                ):
+                ) -> float:
     mol=gto.Mole()
     mol.atom=[]
     for i in atom_list:
@@ -176,10 +176,10 @@ def pyscf_mp2(  fragment :Fragment,
 
     return mp2.e_tot
 
-def vqechem(    fragment :Fragment,
-                atom_list:list, 
-                option: mbe_option
-                ):
+def vqechem(fragment :Fragment,
+            atom_list:list, 
+            option: mbe_option
+            ) -> float:
     option_cp = copy.deepcopy(option)
     mol=gto.Mole()
     mol.atom=[]
@@ -211,10 +211,10 @@ def vqechem(    fragment :Fragment,
     ansatz = run_vqe(mol,vqe_options)
     return ansatz._energy
 
-def vqe_oo(    fragment :Fragment,
-                atom_list:list, 
-                option: mbe_option
-                ):
+def vqe_oo( fragment :Fragment,
+            atom_list:list, 
+            option: mbe_option
+            ) -> float:
     option_cp = copy.deepcopy(option)
     mol=gto.Mole()
     mol.atom=[]
@@ -243,6 +243,6 @@ def vqe_oo(    fragment :Fragment,
     mo_list = range(ncore,ncore+option.ncas)    
     option_cp.update(ncore = ncore,mo_list=mo_list,qmmm_coords = None,qmmm_charges = None)
     vqe_options = option_cp.make_vqe_options()
-    E, dE1, dE2 = vqe_oo(mol, vqe_options, nvir)
-    return E+dE1
+    e, de1, de2 = vqe_oo(mol, vqe_options, nvir)
+    return e+de1
 

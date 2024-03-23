@@ -22,6 +22,7 @@ python -m pip install --user openfermion
 
 ```
 conda install openbabel -c conda-forge 
+pip install -U openbabel
 ```
 
 ## dmet library:
@@ -41,3 +42,6 @@ conda install openbabel -c conda-forge
 
 
 # Installation
+```
+python3 -m pip install -e .
+```

@@ -3,7 +3,7 @@ import dmet as dmet
 import numpy as np
 from mqc.system.fragment import Fragment
 
-class DMET_base(object):
+class DMET_Base(object):
     def __init__(self,fragment: Fragment, method = "CC",SCmethod = "NONE", isTI = False):
         self.fragment = fragment
         self.mol = fragment.mol
@@ -27,7 +27,7 @@ class DMET_base(object):
         self.localint.molden( molden_name )
         self.localint.TI_OK = True
     
-    def mulliken_pop_analyse(self, atom_list = None, thres = 0.01):
+    def mulliken_pop_analyse(self, atom_list = None, thres = 0.01) -> list:
         mf = self.fragment.mf
         (pop, chg), dip = mf.analyze(verbose=0,with_meta_lowdin=True)
         mol = mf.mol

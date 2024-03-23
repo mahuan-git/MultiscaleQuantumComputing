@@ -8,11 +8,10 @@ from mqc.system.fragment import Fragment
 from mqc.tools.tools import get_distance
 from .option import mbe_option
 
-class MBE_base(object):
+class MBE_Base(object):
     def __init__(   self, 
                     fragment:Fragment,
-                    mbe_option: mbe_option
-                    ):
+                    mbe_option: mbe_option):
         self.fragment = fragment
         self.mbe_option =mbe_option
         self.structure = self.fragment.structure
@@ -35,22 +34,10 @@ class MBE_base(object):
             assert self.mbe_option.save_root is not None, "save root should be given when choose to save hamiltonians."
             if self.mbe_option.save_root[-1] != '/':
                 self.mbe_option.save_root += '/'
-            if not os.path.exists(self.mbe_option.save_root):
-                os.mkdir(self.mbe_option.save_root)
-                print("directory made:",self.mbe_option.save_root)
-            if not os.path.exists(self.mbe_option.save_root+"mbe_1/"):
-                os.mkdir(self.mbe_option.save_root+"mbe_1/")
-                print("directory made:",self.mbe_option.save_root+"mbe_1/")
-            if not os.path.exists(self.mbe_option.save_root+"mbe_2/"):
-                os.mkdir(self.mbe_option.save_root+"mbe_2/")
-                print("directory made:",self.mbe_option.save_root+"mbe_2/")
-            if not os.path.exists(self.mbe_option.save_root+"mbe_2_info/"):
-                os.mkdir(self.mbe_option.save_root+"mbe_2_info/")
-                print("directory made:",self.mbe_option.save_root+"mbe_2_info/")
-            if (self.mbe_option.qmmm_coords is not None) and (len(self.mbe_option.qmmm_coords)>0):
-                if not os.path.exists(self.mbe_option.save_root+"qmmm_mbe_1/"):
-                    os.mkdir(self.mbe_option.save_root+"qmmm_mbe_1/")
-                    print("directory made: ",self.mbe_option.save_root+"qmmm_mbe_1/")
+            root = self.mbe_option.save_root
+            for path in [root, root+"mbe_1/",root+"mbe_2/",root+"mbe_2_info/",root+"qmmm_mbe_1/"]:
+                if not os.path.exists(path):
+                    os.mkdir(self.mbe_option.save_root)
 
     def get_mbe_1(self):
         self.mbe_option.ncas = self.mbe_option.ncas1
@@ -112,11 +99,10 @@ class MBE_base(object):
         
     def get_energy(self,atom_list):
         from mqc.solver import mbe_solver
-        assert self.solver in ["pyscf_uhf","pyscf_rhf","pyscf_dft","pyscf_ccsd","pyscf_mp2","vqechem","vqe_oo"]
+        assert self.solver in ["pyscf_uhf","pyscf_rhf","pyscf_dft","pyscf_ccsd","pyscf_mp2","vqechem","vqe_oo"] , "solver %s not implemented"%(self.solver)
         energy = getattr(mbe_solver,self.solver)(fragment = self.fragment,
                                                  atom_list = atom_list,  
-                                                 option = self.mbe_option 
-                                                 )
+                                                 option = self.mbe_option)
         return energy
     
     def get_qmmm_corr(self):
@@ -138,12 +124,11 @@ class MBE_base(object):
         from mqc.solver import mbe_solver_qmmm
         energy = getattr(mbe_solver_qmmm,self.solver+"_qmmm")(fragment = self.fragment,
                                                               atom_list = atom_list, 
-                                                              option = self.mbe_option 
-                                                                )
+                                                              option = self.mbe_option)
         return energy
 
 
-class MBE_protein(MBE_base):
+class MBE_Protein(MBE_Base):
     def __init__(self, fragment: Fragment, mbe_option: mbe_option):
         super().__init__(fragment, mbe_option)
         self.fragment_center = self.get_fragment_center()
@@ -172,7 +157,7 @@ class MBE_protein(MBE_base):
         def _get_rhf_energy(atom_list):
             energy = pyscf_rhf( fragment= self.fragment,
                                 atom_list=atom_list,
-                                link_atom=self.ink_atom)
+                                link_atom=self.mbe_option.link_atom)
             return energy
         
         frag1 = self.qm_fragment[frag_idx_1]
@@ -208,11 +193,10 @@ class MBE_protein(MBE_base):
             if (frag_center_dist > thres_dist):
                 skip_count += 1
                 skip_dict.append(idx)
-                #print("mbe_2 index: ",idx)
-                #print("fragment index: ",frag_idx[0],"  ",frag_idx[1])
         return
     
     def get_mbe_2(self,thres_dist = 15.0,ncas_occ = 4,ncas_vir = 4):
+        raise NotImplementedError("not implemented")
         self.mbe_2=[]
         if self.isTI == True:
             mbe_2_tmp=[]
