@@ -9,7 +9,7 @@ def main(structure_file_name = "./POSCAR_acid"):
     frag = Fragment_Metal_Mol_DMET(structure = struct, basis='sto-3g', charge=0, restricted=True, run_ccsd=False)
     frag.build()
 
-    dmet = DMET_Base(frag,method = "CC",)
+    dmet = DMET_Base(frag,method = "VQECHEM",)
     dmet.build()
     dmet.run()
     

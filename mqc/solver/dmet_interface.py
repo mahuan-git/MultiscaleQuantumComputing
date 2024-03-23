@@ -63,7 +63,10 @@ class DMET():
         self._n_orb = one_body_mo.shape[0]
         self._n_imp_elec = n_imp_elec
         self._n_imp_orbs = n_imp_orbs ## number of impurity orbitals (n_orb = n_imp_orbs + n_bath_orbs)
-
+        
+        self._orbsym = None
+        self._prod_table = None
+        
         self._name = 'dmet'
         # mapping from fermion to qubit
         self._mapping = options['mapping'].upper() 

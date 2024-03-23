@@ -5,6 +5,8 @@ from mqc.system.fragment import Fragment
 
 class DMET_Base(object):
     def __init__(self,fragment: Fragment, method = "CC",SCmethod = "NONE", isTI = False):
+        method = method.upper()
+        SCmethod = SCmethod.upper()
         self.fragment = fragment
         self.mol = fragment.mol
         self.mf = fragment.mf

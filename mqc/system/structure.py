@@ -84,7 +84,8 @@ class Structure(object):
             self.obmol.AddHydrogens()
             self.pymol = pybel.Molecule(self.obmol)
             for atom in self.pymol.atoms:
-                self.input_geometry.append((atom.type,atom.coords))
+                from pyscf.data.elements import ELEMENTS
+                self.input_geometry.append((ELEMENTS[atom.atomicnum],np.array(atom.coords)))
             self.geometry = self.input_geometry
         return self.obmol
 
@@ -123,17 +124,21 @@ class Structure(object):
                 self.mm_atom_list.append(idx)
 
     def get_mm_charge_mm_coords(self,basis = "sto-3g"):
-        from pyscf import gto,scf
-        self.mm_charges = []
-        self.mm_coords = []
-        mol = gto.Mole()
-        mol.atom = self.geometry
-        mol.basis = basis
-        hf = scf.HF(mol).run()
-        (pop, chg), dip = hf.analyze(verbose=0,with_meta_lowdin=True) 
-        for idx in self.mm_atom_list:
-            self.mm_charges.append(chg[idx])
-            self.mm_coords.append(self.geometry[idx][1])
+        if (self.mm_atom_list is not None) and (len(self.mm_atom_list) > 0):
+            from pyscf import gto,scf
+            self.mm_charges = []
+            self.mm_coords = []
+            mol = gto.Mole()
+            mol.atom = self.geometry
+            mol.basis = basis
+            hf = scf.HF(mol).run()
+            (pop, chg), dip = hf.analyze(verbose=0,with_meta_lowdin=True) 
+            for idx in self.mm_atom_list:
+                self.mm_charges.append(chg[idx])
+                self.mm_coords.append(self.geometry[idx][1])
+        else:
+            self.mm_charges = []
+            self.mm_coords = []
 
     
 class Structure_Metal_Mol(Structure):

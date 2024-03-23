@@ -6,7 +6,7 @@ import scipy.sparse.linalg
 import scipy.optimize
 import openfermion
 
-from dmet_interface import DMET , imp_optimizer
+from mqc.solver.dmet_interface import DMET , imp_optimizer
 from vqechem.set_options import set_options
 from vqechem.fermion_operator import FermionOps
 from vqechem.qubit_operator import QubitOps

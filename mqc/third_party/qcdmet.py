@@ -12,10 +12,8 @@ class MyDMET(dmet):
                  fitImpBath : bool =True, 
                  use_constrained_opt: bool =False):
         method = method.upper()
-        try:
-            super().__init__(theInts, impurityClusters, isTranslationInvariant, method, SCmethod, fitImpBath, use_constrained_opt)
-        except AssertionError:
-            assert method in ['CC','ED','MP2','VQE','VQECHEM','ADAPT','GET_CIRC']
+        super().__init__(theInts, impurityClusters, isTranslationInvariant, method, SCmethod, fitImpBath, use_constrained_opt)
+        assert method in ['CC','ED','MP2','VQE','VQECHEM','ADAPT','GET_CIRC']
         
         ## add setting for freeze orbitals.
         self.freez_flag = False
