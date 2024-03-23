@@ -29,7 +29,7 @@ pip install -U openbabel
 
 ### qc-dmet
 [https://github.com/SebWouters/QC-DMET.git](https://github.com/SebWouters/QC-DMET.git)
-
+A modified verson which supports python3 and pyscf >= 2.0 is available at [https://github.com/mahuan-git/QC-DMET-py3.git](https://github.com/mahuan-git/QC-DMET-py3.git)
 ### lib-dmet (optional)
 [https://github.com/zhcui/libdmet_preview.git](https://github.com/zhcui/libdmet_preview.git)
 

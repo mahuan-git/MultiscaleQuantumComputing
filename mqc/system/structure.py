@@ -74,7 +74,7 @@ class Structure(object):
         self.get_mm_atom_list()
         self.get_mm_charge_mm_coords()
 
-    def read_geometry(self):
+    def read_geometry(self) -> pybel.Molecule:
         if self.file_name is not None:
             self.input_geometry = []
             self.obmol = openbabel.OBMol()

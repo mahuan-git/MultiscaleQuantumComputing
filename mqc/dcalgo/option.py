@@ -1,4 +1,4 @@
-from vqechem.set_options import set_options
+
 
 class mbe_option(object):
     """
@@ -85,7 +85,6 @@ class mbe_option(object):
                             'file': {'save_directory':self.save_directory}
                             }
         return self.vqe_options
-
 
 
 class dmet_option(object):
