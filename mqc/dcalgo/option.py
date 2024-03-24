@@ -56,20 +56,20 @@ class mbe_option(object):
         
         self.vqe_options = None
 
-        for (key,value) in kwargs.items():
-            if hasattr(self,key):
-                setattr(self,key,value)
+        self.update(**kwargs)
 
     def update(self,**kwargs):
         for (key,value) in kwargs.items():
             if hasattr(self,key):
                 setattr(self,key,value)
+            else:
+                raise Warning("%s is not an attribute of mbe option, this may cause error."%(key))
 
     def save_option(self):
-        pass
+        raise NotImplementedError
 
     def load_option(self):
-        pass
+        raise NotImplementedError
 
     def make_vqe_options(self,**kwargs):    
         self.update(**kwargs)    

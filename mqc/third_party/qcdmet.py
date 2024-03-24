@@ -13,7 +13,7 @@ class MyDMET(dmet):
                  use_constrained_opt: bool =False):
         method = method.upper()
         super().__init__(theInts, impurityClusters, isTranslationInvariant, method, SCmethod, fitImpBath, use_constrained_opt)
-        assert method in ['CC','ED','MP2','VQE','VQECHEM','ADAPT','GET_CIRC']
+        assert method in ['CC','ED','MP2','VQE','VQECHEM',"SCI",'ADAPT','GET_CIRC']
         
         ## add setting for freeze orbitals.
         self.freez_flag = False
@@ -106,6 +106,13 @@ class MyDMET(dmet):
                 from mqc.solver.dmet_soler_vqechem import solve
                 print('start vqe solver from vqechem')
                 IMP_energy, IMP_1RDM = solve(dmetOEI,dmetFOCK, dmetTEI,Nelec_in_imp,numImpOrbs,chempot_imp)
+                print('end vqe solver')
+            elif ( self.method == 'SCI' ):
+                from mqc.solver.dmet_soler_sci import solve
+                assert( Nelec_in_imp % 2 == 0 )
+                print('start_sci_solve')
+                DMguessRHF = self.ints.dmet_init_guess_rhf( loc2dmet, Norb_in_imp, Nelec_in_imp//2, numImpOrbs, chempot_imp )
+                IMP_energy, IMP_1RDM = solve( 0.0, dmetOEI, dmetFOCK, dmetTEI, Norb_in_imp, Nelec_in_imp, numImpOrbs, DMguessRHF, self.CC_E_TYPE, chempot_imp )
                 print('end vqe solver')
             '''
             elif ( self.method == 'VQE' ):

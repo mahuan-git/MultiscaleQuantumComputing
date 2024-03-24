@@ -17,7 +17,7 @@ from mqc.system.fragment import Fragment
 from mqc.tools.link_atom_tool import add_link_atoms
 from mqc.dcalgo.option import mbe_option
 from vqechem.algorithms import run_vqe
-from vqechem.orbital_optimize import vqe_oo
+from vqechem.orbital_optimize import vqe_oo as orbital_optimize_vqe
 import copy
 
 def pyscf_uhf(  fragment :Fragment,
@@ -185,8 +185,8 @@ def vqechem(fragment :Fragment,
     mol.atom=[]
     for i in atom_list:
         mol.atom.append(fragment.qm_geometry[i])
-    if option.link_atom is not None:
-        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = option.link_atom ,connection=fragment.connection)
+    if option_cp.link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = option_cp.link_atom ,connection=fragment.connection)
         for coordinate in H_atom_coordinates:
             mol.atom.append(('H',coordinate))
     charge = 0
@@ -200,12 +200,16 @@ def vqechem(fragment :Fragment,
     mol.basis = fragment.basis
     mol.build()
     nocc = mol.nelectron//2
-    ncas_occ = int(np.floor(option.ncas/2))
-    ncas_vir = int(np.ceil(option.ncas/2))
-    assert (ncas_occ + ncas_vir) == option.ncas
+    if option_cp.ncas == None:
+        option_cp.ncas = mol.nao_nr()
+    if option_cp.ncore ==None:
+        option_cp.ncore = 0
+    ncas_occ = int(np.floor(option_cp.ncas/2))
+    ncas_vir = int(np.ceil(option_cp.ncas/2))
+    assert (ncas_occ + ncas_vir) == option_cp.ncas
     ncore = nocc - ncas_occ
     nvir = ncas_vir
-    mo_list = range(ncore,ncore+option.ncas)    
+    mo_list = range(ncore,ncore+option_cp.ncas)    
     option_cp.update(ncore = ncore,mo_list=mo_list,qmmm_coords = None,qmmm_charges = None)
     vqe_options = option_cp.make_vqe_options()
     ansatz = run_vqe(mol,vqe_options)
@@ -220,8 +224,8 @@ def vqe_oo( fragment :Fragment,
     mol.atom=[]
     for i in atom_list:
         mol.atom.append(fragment.qm_geometry[i])
-    if option.link_atom is not None:
-        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = option.link_atom ,connection=fragment.connection)
+    if option_cp.link_atom is not None:
+        H_atom_coordinates = add_link_atoms(fragment.qm_geometry,atom_list,mode = option_cp.link_atom ,connection=fragment.connection)
         for coordinate in H_atom_coordinates:
             mol.atom.append(('H',coordinate))
     charge = 0
@@ -235,14 +239,18 @@ def vqe_oo( fragment :Fragment,
     mol.basis = fragment.basis
     mol.build()
     nocc = mol.nelectron//2
-    ncas_occ = int(np.floor(option.ncas/2))
-    ncas_vir = int(np.ceil(option.ncas/2))
-    assert (ncas_occ + ncas_vir) == option.ncas
+    if option_cp.ncas == None:
+        option_cp.ncas = mol.nao_nr()
+    if option_cp.ncore ==None:
+        option_cp.ncore = 0
+    ncas_occ = int(np.floor(option_cp.ncas/2))
+    ncas_vir = int(np.ceil(option_cp.ncas/2))
+    assert (ncas_occ + ncas_vir) == option_cp.ncas
     ncore = nocc - ncas_occ
     nvir = ncas_vir
-    mo_list = range(ncore,ncore+option.ncas)    
+    mo_list = range(ncore,ncore+option_cp.ncas)    
     option_cp.update(ncore = ncore,mo_list=mo_list,qmmm_coords = None,qmmm_charges = None)
     vqe_options = option_cp.make_vqe_options()
-    e, de1, de2 = vqe_oo(mol, vqe_options, nvir)
+    e, de1, de2 = orbital_optimize_vqe(mol, vqe_options, nvir)
     return e+de1
 

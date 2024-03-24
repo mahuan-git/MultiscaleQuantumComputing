@@ -11,7 +11,7 @@ def main(structure_file_name = "./POSCAR_acid"):
 
     dmet = DMET_Base(frag,method = "VQECHEM",)
     dmet.build()
-    dmet.run()
+    energy = dmet.run()
     
     print("energy = ",dmet.energy)
     return dmet

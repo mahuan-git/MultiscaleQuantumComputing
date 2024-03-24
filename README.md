@@ -1,5 +1,5 @@
 # ABQCC
-Codes for Airbus BMW group Quantum Computing Challenge 2024 (ABQCC). 
+Multiscale Quantum Computing Codes for Airbus BMW group Quantum Computing Challenge 2024 (ABQCC). 
 
 # requirements:
 
@@ -45,3 +45,9 @@ A modified verson which supports python3 and pyscf >= 2.0 is available at [https
 ```
 python3 -m pip install -e .
 ```
+
+# To be developed:
+
+1. optimization of rdm calculation
+2. debug : sci solver for dmet
+3. q2chemistry solver 
