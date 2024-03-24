@@ -2,9 +2,6 @@ import os
 os.environ["OMP_NUM_THREADS"] = "4"
 
 import numpy
-import scipy.sparse.linalg
-import scipy.optimize
-import openfermion
 
 from mqc.solver.dmet_interface import DMET , imp_optimizer
 from vqechem.set_options import set_options
@@ -15,12 +12,13 @@ from vqechem.algorithms import reference
 from vqechem.ansatz_pool import ADAPT
 import time
 
+from mqc.tools.rdm import make_strings_qubit, make_rdm1, make_rdm2,make_rdm12
 def solve(
         oei_mo,
         one_body_mo,
         two_body_mo,
-        n_imp: int,
-        n_imp_orbs: int,
+        n_imp: int, ## number of electrons in the impurity
+        n_imp_orbs: int,  ## number of orbitals in the impurity
         chempot_imp = 0.0,
         skip_vqe: bool = True):
     n_imp = n_imp
@@ -70,63 +68,66 @@ def solve(
     ansatz , params = opt.run(ansatz)
     time1= time.clock()
     wfn = ansatz.state(params)
-    S=wfn.conj().T.dot(wfn)[0,0]
+    #wfn =wfn.toarray() ##this may face an oom error
 
-    rdm1 = numpy.zeros([n_orb] * 2)
-    rdm2 = numpy.zeros([n_orb] * 4)
-    for p in range(0, n_orb * 2, 2):
-        for q in range(0, n_orb * 2, 2):
-            rdm1_op = openfermion.FermionOperator(
-                ((p, 1), (q, 0)),
-                1.0
-            )
-            # Here we use matrix operations. For quantum circuit simulations,
-            # this can be done through measurements.
-            rdm1_sparse_mat = openfermion.get_sparse_operator(
-                rdm1_op, n_qubits=n_qubits)
-            rdm1[p // 2][q // 2] = wfn.T.conj().dot(
-                rdm1_sparse_mat.dot(wfn))[0, 0] * 2 / S
+    #S=wfn.conj().T.dot(wfn)[0,0]
 
-            for r in range(0, n_orb * 2, 2):
-                for s in range(0, n_orb * 2, 2):
-                    rdm2_op = openfermion.FermionOperator(
-                        ((p, 1), (q, 1), (r, 0), (s, 0)),
-                        1.0
-                    )
-                    rdm2_sparse_mat = openfermion.get_sparse_operator(
-                        rdm2_op, n_qubits=n_qubits)
-                    rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
-                        rdm2_sparse_mat.dot(wfn))[0, 0]/S
+    # rdm1 = numpy.zeros([n_orb] * 2)
+    # rdm2 = numpy.zeros([n_orb] * 4)
+    # for p in range(0, n_orb * 2, 2):
+    #     for q in range(0, n_orb * 2, 2):
+    #         rdm1_op = openfermion.FermionOperator(
+    #             ((p, 1), (q, 0)),
+    #             1.0
+    #         )
+    #         # Here we use matrix operations. For quantum circuit simulations,
+    #         # this can be done through measurements.
+    #         rdm1_sparse_mat = openfermion.get_sparse_operator(
+    #             rdm1_op, n_qubits=n_qubits)
+    #         rdm1[p // 2][q // 2] = wfn.T.conj().dot(
+    #             rdm1_sparse_mat.dot(wfn))[0, 0] * 2 / S
 
-                    rdm2_op = openfermion.FermionOperator(
-                        ((p + 1, 1), (q + 1, 1), (r + 1, 0), (s + 1, 0)),
-                        1.0
-                    )
-                    rdm2_sparse_mat = openfermion.get_sparse_operator(
-                        rdm2_op, n_qubits=n_qubits)
-                    rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
-                        rdm2_sparse_mat.dot(wfn))[0, 0]/S
+    #         for r in range(0, n_orb * 2, 2):
+    #             for s in range(0, n_orb * 2, 2):
+    #                 rdm2_op = openfermion.FermionOperator(
+    #                     ((p, 1), (q, 1), (r, 0), (s, 0)),
+    #                     1.0
+    #                 )
+    #                 rdm2_sparse_mat = openfermion.get_sparse_operator(
+    #                     rdm2_op, n_qubits=n_qubits)
+    #                 rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
+    #                     rdm2_sparse_mat.dot(wfn))[0, 0]/S
 
-                    rdm2_op = openfermion.FermionOperator(
-                        ((p + 1, 1), (q, 1), (r, 0), (s + 1, 0)),
-                        1.0
-                    )
-                    rdm2_sparse_mat = openfermion.get_sparse_operator(
-                        rdm2_op, n_qubits=n_qubits)
-                    rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
-                        rdm2_sparse_mat.dot(wfn))[0, 0]/S
+    #                 rdm2_op = openfermion.FermionOperator(
+    #                     ((p + 1, 1), (q + 1, 1), (r + 1, 0), (s + 1, 0)),
+    #                     1.0
+    #                 )
+    #                 rdm2_sparse_mat = openfermion.get_sparse_operator(
+    #                     rdm2_op, n_qubits=n_qubits)
+    #                 rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
+    #                     rdm2_sparse_mat.dot(wfn))[0, 0]/S
 
-                    rdm2_op = openfermion.FermionOperator(
-                        ((p, 1), (q + 1, 1), (r + 1, 0), (s, 0)),
-                        1.0
-                    )
-                    rdm2_sparse_mat = openfermion.get_sparse_operator(
-                        rdm2_op, n_qubits=n_qubits)
-                    rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
-                        rdm2_sparse_mat.dot(wfn))[0, 0]/S
+    #                 rdm2_op = openfermion.FermionOperator(
+    #                     ((p + 1, 1), (q, 1), (r, 0), (s + 1, 0)),
+    #                     1.0
+    #                 )
+    #                 rdm2_sparse_mat = openfermion.get_sparse_operator(
+    #                     rdm2_op, n_qubits=n_qubits)
+    #                 rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
+    #                     rdm2_sparse_mat.dot(wfn))[0, 0]/S
 
-            print("Finished %d/%d..." % (1 + p//2 * n_orb + q//2, n_orb ** 2),
-                  end="\r")
+    #                 rdm2_op = openfermion.FermionOperator(
+    #                     ((p, 1), (q + 1, 1), (r + 1, 0), (s, 0)),
+    #                     1.0
+    #                 )
+    #                 rdm2_sparse_mat = openfermion.get_sparse_operator(
+    #                     rdm2_op, n_qubits=n_qubits)
+    #                 rdm2[p // 2][s // 2][q // 2][r // 2] += wfn.T.conj().dot(
+    #                     rdm2_sparse_mat.dot(wfn))[0, 0]/S
+
+    #         print("Finished %d/%d..." % (1 + p//2 * n_orb + q//2, n_orb ** 2),
+    #               end="\r")
+    rdm1,rdm2 = get_rdm12(wfn,n_imp,n_orb,Sz = 0)
     imp_energy = 0.0
     imp_energy += 0.5 * numpy.einsum(
         'ij,ij->',
@@ -140,4 +141,20 @@ def solve(
     print('time for vqechem calculation = %f'%(time1-start))
     print('time for constructing rdm1 and rdm2 = %f '%(time2-time1))
     return imp_energy, rdm1
+
+def get_rdm1(wfn,nelec, norb,Sz = 0):
+    strings= make_strings_qubit(orb_list = range(norb),nelec = nelec, Sz = Sz)
+    fcivec = []
+    for idx in strings:
+        fcivec.append(wfn[idx])
+    rdm1 = make_rdm1(fcivec=fcivec , norb = norb, nelec = nelec,Sz = Sz)
+    return rdm1
+
+def get_rdm12(wfn,nelec,norb,Sz = 0):
+    strings= make_strings_qubit(orb_list = range(2*norb),nelec = nelec, Sz = Sz)
+    fcivec = []
+    for idx in strings:
+        fcivec.append(wfn[idx,0])
+    rdm1,rdm2 = make_rdm12(fcivec=fcivec , norb = norb, nelec = nelec,Sz = Sz)
+    return rdm1 , rdm2
 
