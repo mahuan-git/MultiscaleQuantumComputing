@@ -158,7 +158,7 @@ class Structure_Metal_Mol(Structure):
         '''initialize structure for subsequence calculation.'''
         self._devide_molecule_substrate()
         self._find_bonding_atoms()
-        self._select_al_cluster()
+        self._select_al_cluster(cluster_size)
         self.geometry = self._molecule+self._substrate_select
         self._get_bonding_atom_index()
         return
@@ -184,7 +184,9 @@ class Structure_Metal_Mol(Structure):
                 self._substrate_bonding_atom = atom
         return
 
-    def _select_al_cluster(self):
+    def _select_al_cluster(self,cluster_size = None):
+        if cluster_size is not None:
+            self._cluster_size = cluster_size
         for atom in self._substrate:
             if get_distance(atom[1],self._substrate_bonding_atom[1])<self._cluster_size:
                 self._substrate_select.append(atom)
