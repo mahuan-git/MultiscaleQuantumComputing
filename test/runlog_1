@@ -1,0 +1,178 @@
+converged SCF energy = -5.24139480057361
+RHF energy = -5.241394800573607
+DMET iteration 1
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006248
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 2.3313120983561275e-15
+E FCI = -4.188563114938022
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006242
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 2.3501517984847372e-15
+E FCI = -4.188563114938024
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006259
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.1709997915165099e-15
+E FCI = -4.188563114938029
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006261
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.2111259567713262e-15
+E FCI = -4.188563114938027
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006235
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.2616842796937244e-15
+E FCI = -4.188563114938024
+end vqe solver
+total energy
+-5.365501359331271
+      (chemical potential , number of electrons) = ( 0.0 , 9.993478139649511 )
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284251
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417680928697e-07
+E FCI = -4.1887629897120995
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284239
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417675298856e-07
+E FCI = -4.188762989712103
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284246
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417689080653e-07
+E FCI = -4.188762989712108
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284253
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417588261953e-07
+E FCI = -4.188762989712105
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.809423871228423
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417699922056e-07
+E FCI = -4.188762989712103
+end vqe solver
+total energy
+-5.366124153032564
+      (chemical potential , number of electrons) = ( 0.0001 , 9.993999264807204 )
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.809428632644076
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.694713615014147e-06
+E FCI = -4.1910652905567645
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286326440754
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.6947136151978416e-06
+E FCI = -4.191065290556772
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286326440764
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.694713615925461e-06
+E FCI = -4.191065290556777
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286326440774
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.694713615271195e-06
+E FCI = -4.191065290556773
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286326440743
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.694713615155514e-06
+E FCI = -4.191065290556772
+end vqe solver
+total energy
+-5.3732907580550435
+      (chemical potential , number of electrons) = ( 0.0012514959706339476 , 9.999998568920391 )
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286338563659
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.695740688944108e-06
+E FCI = -4.191065839904109
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286338563644
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.695740687397235e-06
+E FCI = -4.191065839904111
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286338563653
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.69574068740592e-06
+E FCI = -4.191065839904116
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286338563659
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.695740687789315e-06
+E FCI = -4.191065839904114
+end vqe solver
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_sci_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094286338563623
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.695740687083254e-06
+E FCI = -4.191065839904109
+end vqe solver
+total energy
+-5.373292466490442
+      (chemical potential , number of electrons) = ( 0.001251770644323272 , 9.999999999659842 )
+   Chemical potential = 0.001251770709626907
+   Energy = -5.373292466490442
+   Cost function after convergence = 0.014190063809673163
+The u-matrix =
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+The ED 1-RDM of the impurities ( + baths ) =
+[[ 1.000e+00  6.347e-01 -5.240e-01 -5.249e-01]
+ [ 6.347e-01  1.000e+00 -5.240e-01  5.249e-01]
+ [-5.240e-01 -5.240e-01  3.731e-01 -4.979e-16]
+ [-5.249e-01  5.249e-01 -4.979e-16  1.627e+00]]
+[[ 1.000e+00  6.347e-01  5.249e-01  5.240e-01]
+ [ 6.347e-01  1.000e+00 -5.249e-01  5.240e-01]
+ [ 5.249e-01 -5.249e-01  1.627e+00  6.939e-17]
+ [ 5.240e-01  5.240e-01  6.939e-17  3.731e-01]]
+[[ 1.000e+00  6.347e-01  5.249e-01  5.240e-01]
+ [ 6.347e-01  1.000e+00 -5.249e-01  5.240e-01]
+ [ 5.249e-01 -5.249e-01  1.627e+00 -7.216e-16]
+ [ 5.240e-01  5.240e-01 -7.216e-16  3.731e-01]]
+[[ 1.000e+00  6.347e-01  5.249e-01  5.240e-01]
+ [ 6.347e-01  1.000e+00 -5.249e-01  5.240e-01]
+ [ 5.249e-01 -5.249e-01  1.627e+00 -1.162e-16]
+ [ 5.240e-01  5.240e-01 -1.162e-16  3.731e-01]]
+[[ 1.000e+00  6.347e-01 -5.249e-01 -5.240e-01]
+ [ 6.347e-01  1.000e+00  5.249e-01 -5.240e-01]
+ [-5.249e-01  5.249e-01  1.627e+00 -4.441e-16]
+ [-5.240e-01 -5.240e-01 -4.441e-16  3.731e-01]]
+   2-norm of difference old and new u-mat = 0.0
+   2-norm of difference old and new 1-RDM = 3.7454838885893524
+******************************************************
+Time cf func = 0.0003123283386230469
+Time cf grad = 0.0
+Time dmet ed = 0.8234093189239502
+Time dmet cf = 0.0004267692565917969
+dmet energy:  -5.373292466490442

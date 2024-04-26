@@ -3,7 +3,7 @@ from mqc.tools.iotools import read_mol2_structure
 from mqc.tools.tools import get_distance
 from openbabel import openbabel
 from openbabel import pybel
-
+import copy
 
 def hydrogen_ring(natom = 10,bondlength = 1.0):
     geometry = []
@@ -111,7 +111,7 @@ class Structure(object):
         else:
             self.qm_atom_list = list(range(len(self.geometry)))
 
-    def set_qm_geometry(self):        
+    def set_qm_geometry(self):
         self.qm_geometry = []
         for idx in range(len(self.geometry)):
             if idx in self.qm_atom_list:
@@ -158,7 +158,7 @@ class Structure_Metal_Mol(Structure):
         '''initialize structure for subsequence calculation.'''
         self._devide_molecule_substrate()
         self._find_bonding_atoms()
-        self._select_al_cluster(cluster_size)
+        self._select_metal_cluster(cluster_size)
         self.geometry = self._molecule+self._substrate_select
         self._get_bonding_atom_index()
         return
@@ -184,7 +184,7 @@ class Structure_Metal_Mol(Structure):
                 self._substrate_bonding_atom = atom
         return
 
-    def _select_al_cluster(self,cluster_size = None):
+    def _select_metal_cluster(self,cluster_size = None):
         if cluster_size is not None:
             self._cluster_size = cluster_size
         for atom in self._substrate:
@@ -197,7 +197,41 @@ class Structure_Metal_Mol(Structure):
             if np.isclose(self.geometry[idx][1]-self._molecule_bonding_atom[1],0).all():
                 self._bonding_atom_index.update({"mol":idx})
             if np.isclose(self.geometry[idx][1]-self._substrate_bonding_atom[1],0).all():
-                self._bonding_atom_index.update({"al":idx})               
+                self._bonding_atom_index.update({self._metal_name:idx})               
+
+    def _get_atom_index(self, atom, geometry):
+        for idx in range(len(geometry)):
+            if np.isclose(geometry[idx][1]-atom[1],0).all():
+                assert geometry[idx][0] ==atom[0]
+                return idx
+        raise Warning("Atom is not fount in given geometry")
+        return None
+
+
+def make_unbonded_structure(struct: Structure_Metal_Mol,dist = 10) -> Structure_Metal_Mol:
+    new_struct = Structure_Metal_Mol(file_name = struct.file_name , file_format= struct.file_format, \
+                                     metal_name=struct._metal_name,cluster_size = struct._cluster_size)
+    new_struct.build()
+    for idx in range(len(new_struct._molecule)):
+        atom = new_struct._molecule[idx]
+        new_struct._molecule[idx] = (atom[0],atom[1]+np.array([0,0,dist]))
+    if False:
+        same_layer_atom_list_z = []
+        for atom in new_struct._substrate_select:
+            if 0.01<abs(atom[1][2] - new_struct._substrate_bonding_atom[1][2]) < 1.0:
+                same_layer_atom_list_z.append(atom[1][2])
+        new_substrate_bonding_atom = new_struct._substrate_bonding_atom
+        new_substrate_bonding_atom[1][2] = sum(same_layer_atom_list_z)/len(same_layer_atom_list_z)
+
+        idx = new_struct._get_atom_index(new_struct._substrate_bonding_atom,new_struct._substrate_select)
+        new_struct._substrate_select[idx] = new_substrate_bonding_atom
+
+        idx = new_struct._get_atom_index(new_struct._substrate_bonding_atom,new_struct._substrate)
+        new_struct._substrate[idx] = new_substrate_bonding_atom
+
+    new_struct.geometry = new_struct._molecule +new_struct._substrate_select
+    new_struct.input_geometry = new_struct._molecule + new_struct._substrate
+    return new_struct
 
 
 class Structure_Al(Structure_Metal_Mol):

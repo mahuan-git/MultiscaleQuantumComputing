@@ -1,0 +1,21 @@
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 767985
+max locked memory       (kbytes, -l) unlimited
+max memory size         (kbytes, -m) 186187776
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) unlimited
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 4096
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+Time is Wed Apr 24 16:12:01 CST 2024
+Directory is /public/home/jlyang/quantum/program/ABQCC/test
+This job runs on the following nodes:
+node4
+This job has allocated 48 cpu cores.

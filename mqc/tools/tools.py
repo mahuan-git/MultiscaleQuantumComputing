@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.linalg as la
 
 def get_distance(coordinate_1,coordinate_2)-> float:
     assert(len(coordinate_1)==len(coordinate_2)==3)
@@ -20,7 +19,6 @@ def get_ops_pool(geometry, atom_list,):
     from vqechem.scf_from_pyscf import pyscf_interface
     from vqechem.fermion_operator import FermionOps
     from vqechem.set_options import set_options
-    from mqc.dcalgo.option import mbe_option
     '''
     ''' 
     print('Generate operator pool first\n')

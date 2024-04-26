@@ -28,7 +28,7 @@ class DMET_Base(object):
         self.localint = localintegrals.localintegrals( self.mf, range( self.mol.nao_nr() ), method )
         self.localint.molden( molden_name )
         self.localint.TI_OK = True
-    
+
     def mulliken_pop_analyse(self, atom_list = None, thres = 0.01) -> list:
         mf = self.fragment.mf
         (pop, chg), dip = mf.analyze(verbose=0,with_meta_lowdin=True)
@@ -45,7 +45,7 @@ class DMET_Base(object):
             if (atom_idx in atom_list) and (thres < pop[idx] < (2-thres)):
                 imp_orbitals.append(idx)
         return imp_orbitals
-    
+
     def get_impurity_clusters(self):
         self.impurity_clusters = []
         for frag in self.fragment.qm_fragment:
@@ -54,7 +54,7 @@ class DMET_Base(object):
             for orb in imp_orbs:
                 impurities[ orb ] = 1
             self.impurity_clusters.append( impurities )
-            
+
     def run(self):
         self.energy=self.mydmet.doselfconsistent()
         return self.energy

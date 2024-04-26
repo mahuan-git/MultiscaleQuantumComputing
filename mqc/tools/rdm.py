@@ -2,7 +2,7 @@ from pyscf.fci.cistring import make_strings , cre_des_sign
 from pyscf.fci.fci_slow import reorder_rdm
 import numpy as np
 import time
-def make_strings_qubit(orb_list, nelec,Sz = 0):
+def make_strings_qubit_v1(orb_list, nelec,Sz = 0):
     n_orbs = len(orb_list)
     #assert (all(orb_list[:-1] < orb_list[1:]))
     nelec_a = (nelec+Sz)/2
@@ -15,14 +15,30 @@ def make_strings_qubit(orb_list, nelec,Sz = 0):
             strings.append(i+j)
     return np.asarray(strings, dtype=np.int64)
 
-def gen_linkstr_index_qubit_v1(orb_list, nelec,Sz=0, strs=None):
+def make_strings_qubit(norb, nelec,Sz = 0):
+    nqubit = 2*norb
+    qubit_orb_list = range(nqubit)
+    #assert (all(orb_list[:-1] < orb_list[1:]))
+    nelec_a = (nelec+Sz)/2
+    nelec_b = nelec - nelec_a
+    stra = make_strings(qubit_orb_list[::2],nelec_a)
+    strb = make_strings(qubit_orb_list[1::2],nelec_b)
+    strings = []
+    for i in stra:
+        for j in strb:
+            strings.append(i+j)
+    return np.asarray(strings, dtype=np.int64)
+
+def gen_linkstr_index_qubit_v1(norb, nelec,Sz=0, strs=None):
+    nqubit = 2*norb
+    qubit_orb_list = range(nqubit)
     if strs is None:
-        strs = make_strings_qubit(orb_list, nelec,Sz=Sz)
+        strs = make_strings_qubit(norb, nelec,Sz=Sz)
     strdic = dict(zip(strs,range(strs.__len__())))
     def propagate1e(str0):
         occ = []
         vir = []
-        for i in orb_list:
+        for i in qubit_orb_list:
             if str0 & (1 << i):
                 occ.append(i)
             else:
@@ -46,7 +62,6 @@ def gen_linkstr_index_qubit_v1(orb_list, nelec,Sz=0, strs=None):
 
     t = [propagate1e(s) for s in strs.astype(np.int64)]
     return t
-    #return np.array(t, dtype=np.int32)
 
 def expand_strings(n_orb, strs):
     orb_list = range(2*n_orb)
@@ -73,9 +88,12 @@ def expand_strings(n_orb, strs):
     strs_new = list(strs_set)
     return strs_new
 
-def gen_linkstr_index_qubit(orb_list, nelec,Sz=0, strs_all = None,strs=None):
+def gen_linkstr_index_qubit(norb, nelec,Sz=0, strs_all = None,strs=None):
+    strs_all = np.array(strs_all)
+    nqubit = 2*norb
+    qubit_orb_list = range(nqubit)  
     if strs_all is None:
-        strs_all = make_strings_qubit(orb_list, nelec,Sz=Sz)
+        raise ValueError("can only generate link index for given strings")
     if strs is None:
         strs = strs_all
     strdic = dict(zip(strs_all,range(strs_all.__len__())))
@@ -86,7 +104,7 @@ def gen_linkstr_index_qubit(orb_list, nelec,Sz=0, strs_all = None,strs=None):
     def propagate1e(str0):
         occ = []
         vir = []
-        for i in orb_list:
+        for i in qubit_orb_list:
             if str0 & (1 << i):
                 occ.append(i)
             else:
@@ -109,10 +127,9 @@ def gen_linkstr_index_qubit(orb_list, nelec,Sz=0, strs_all = None,strs=None):
 
     t = [propagate1e(s) for s in strs_all.astype(np.int64)]
     return t
-    #return np.array(t, dtype=np.int32)
 
 def make_rdm1(fcivec,norb,nelec,Sz=0,strs = None,opt=None):
-    link_index = gen_linkstr_index_qubit_v1(range(2*norb), nelec,Sz=Sz,strs = strs)
+    link_index = gen_linkstr_index_qubit_v1(norb, nelec,Sz=Sz,strs = strs)
     rdm1 = np.zeros((norb,norb),dtype ="complex64")
     for str0 , tab in enumerate(link_index):
         for a,i,str1,sign in tab:
@@ -121,7 +138,7 @@ def make_rdm1(fcivec,norb,nelec,Sz=0,strs = None,opt=None):
     return rdm1
 
 def make_rdm1s(fcivec,norb,nelec,Sz=0,strs = None,opt=None):
-    link_index = gen_linkstr_index_qubit_v1(range(2*norb), nelec,Sz=Sz,strs = strs)
+    link_index = gen_linkstr_index_qubit_v1(norb, nelec,Sz=Sz,strs = strs)
     rdm1a = np.zeros((norb,norb),dtype ="complex64")
     rdm1b = np.zeros((norb,norb),dtype ="complex64")
     for str0 , tab in enumerate(link_index):
@@ -137,102 +154,90 @@ def make_rdm1s(fcivec,norb,nelec,Sz=0,strs = None,opt=None):
     return rdm1a, rdm1b
 
 
-def make_rdm2(fcivec, norb, nelec,Sz=0, strs = None,opt=None):
+def make_rdm12(fcivec, norb, nelec,Sz=0, strs = None,opt=None):
     rdm1 = make_rdm1(fcivec=fcivec,norb=norb,nelec=nelec,Sz=Sz,strs = strs,opt=opt)
     print("start making link_index")
     time0 = time.perf_counter()
-    link_index = gen_linkstr_index_qubit(range(2*norb), nelec,Sz=Sz,strs = strs)
+    #link_index = gen_linkstr_index_qubit_v1(norb, nelec,Sz=Sz,strs = strs)
+    link_index = gen_linkstr_index_qubit(norb, nelec,Sz=Sz,strs = strs,strs_all=strs)
     time1 = time.perf_counter()
     print("end making link_index, time used: ", (time1 - time0))
-    #rdm1 = np.zeros((norb,norb),dtype = "complex64")
     rdm2 = np.zeros((norb,norb,norb,norb),dtype = "complex64")
     for str0, tab in enumerate(link_index):
         #t1 = np.zeros((norb,norb),dtype = "complex64")
         for r, s, str1, sign1 in link_index[str0]:
             for p, q, str2, sign2 in link_index[str1]:
                 rdm2[p//2,q//2,r//2,s//2] += sign1*sign2*fcivec[str0].conj() * fcivec[str2]
-        #rdm1+=fcivec[str0].conj()*t1
-        #rdm2 += np.einsum('ij,kl->jikl', t1.conj(), t1)
-        #rdm2 += np.einsum('ij,kl->jkil', t1.conj(), t1)
-        #rdm2 +=np.outer(t1.conj(),t1).reshape(norb,norb,norb,norb)
-    #rdm1 = rdm1.astype("float32")
+    rdm2 = rdm2.astype("float32")
+    return reorder_rdm(rdm1, rdm2)
+
+def make_rdm12_v1(fcivec, norb, nelec,Sz=0, strs = None,opt=None):
+    raise NotImplementedError
+    print("start making link_index")
+    time0 = time.perf_counter()
+    link_index = gen_linkstr_index_qubit_v1(norb, nelec,Sz=Sz,strs = strs)
+    time1 = time.perf_counter()
+    print("end making link_index, time used: ", (time1 - time0))
+    rdm1 = np.zeros((norb,norb),dtype = "complex64")
+    rdm2 = np.zeros((norb,norb,norb,norb),dtype = "complex64")
+    rdm1_qubit = np.zeros((2*norb,2*norb),dtype = "complex64")
+    rdm2_qubit = np.zeros((2*norb,2*norb,2*norb,2*norb),dtype = "complex64")
+    for str0, tab in enumerate(link_index):
+        t1 = np.zeros((2*norb,2*norb),dtype = "complex64")
+        for a, i, str1, sign in link_index[str0]:
+            t1[a,i] += sign * fcivec[str1]
+        rdm1_qubit += fcivec[str0].conj()*t1
+        rdm2_qubit += np.einsum('ij,kl->jikl', t1.conj(), t1)
+    for p in range(2*norb):
+        for q in range(2*norb):
+            rdm1[p//2][q//2] += rdm1_qubit[p][q]
+            for r in range(2*norb):
+                for s in range(2*norb):
+                    rdm2[p//2][q//2][r//2][s//2]+=rdm2_qubit[p][q][r][s]
+    rdm1 = rdm1.astype("float32")
+    rdm2 = rdm2.astype("float32")
+    return reorder_rdm(rdm1, rdm2)
+
+
+def make_rdm12_reduce(fcivec, norb, nelec,Sz=0, strs_all = None,strs = None,opt=None):
+    rdm1 = make_rdm1(fcivec=fcivec,norb=norb,nelec=nelec,Sz=Sz,strs = strs_all,opt=opt)
+    print("start making link_index")
+    time0 = time.perf_counter()
+    #link_index = gen_linkstr_index_qubit_v1(norb, nelec,Sz=Sz,strs = strs)
+    link_index = gen_linkstr_index_qubit(norb, nelec,Sz=Sz,strs = strs,strs_all=strs_all)
+    time1 = time.perf_counter()
+    print("end making link_index, time used: ", (time1 - time0))
+    rdm2 = np.zeros((norb,norb,norb,norb),dtype = "complex64")
+    for str0, tab in enumerate(link_index):
+        #t1 = np.zeros((norb,norb),dtype = "complex64")
+        for r, s, str1, sign1 in link_index[str0]:
+            for p, q, str2, sign2 in link_index[str1]:
+                rdm2[p//2,q//2,r//2,s//2] += sign1*sign2*fcivec[str0].conj() * fcivec[str2]
     rdm2 = rdm2.astype("float32")
     #return rdm2
     return reorder_rdm(rdm1, rdm2)
 
-def make_rdm12_v1(fcivec, norb, nelec,Sz=0, strs = None,opt=None):
-    print("start making link_index")
-    time0 = time.perf_counter()
-    link_index = gen_linkstr_index_qubit(range(2*norb), nelec,Sz=Sz,strs = strs)
-    time1 = time.perf_counter()
-    print("end making link_index, time used: ", (time1 - time0))
-    rdm1 = np.zeros((norb,norb),dtype = "complex64")
-    rdm2 = np.zeros((norb,norb,norb,norb),dtype = "complex64")
-    for str0, tab in enumerate(link_index):
-        t1 = np.zeros((norb,norb),dtype = "complex64")
-        for a, i, str1, sign in link_index[str0]:
-            t1[a//2,i//2] += sign * fcivec[str1]
-        rdm1+=fcivec[str0].conj()*t1
-        rdm2 += np.einsum('ij,kl->jikl', t1.conj(), t1)
-        #rdm2 += np.einsum('ij,kl->jkil', t1.conj(), t1)
-        #rdm2 +=np.outer(t1.conj(),t1).reshape(norb,norb,norb,norb)
-    rdm1 = rdm1.astype("float32")
-    rdm2 = rdm2.astype("float32")
-    return reorder_rdm(rdm1, rdm2)
-
-
-def make_rdm12(fcivec, norb, nelec,Sz=0, strs_all = None,strs = None,opt=None):
-    print("start making link_index")
-    time0 = time.perf_counter()
-    link_index = gen_linkstr_index_qubit(range(2*norb), nelec,Sz=Sz,strs_all = strs_all,strs = strs)
-    time1 = time.perf_counter()
-    print("end making link_index, time used: ", (time1 - time0))
-    rdm1 = np.zeros((norb,norb),dtype = "complex64")
-    rdm2 = np.zeros((norb,norb,norb,norb),dtype = "complex64")
-    for str0, tab in enumerate(link_index):
-        t1 = np.zeros((norb,norb),dtype = "complex64")
-        for a, i, str1, sign in link_index[str0]:
-            t1[a//2,i//2] += sign * fcivec[str1]
-        rdm1+=fcivec[str0].conj()*t1
-        rdm2 += np.einsum('ij,kl->jikl', t1.conj(), t1)
-        #rdm2 += np.einsum('ij,kl->jkil', t1.conj(), t1)
-        #rdm2 +=np.outer(t1.conj(),t1).reshape(norb,norb,norb,norb)
-    rdm1 = rdm1.astype("float32")
-    rdm2 = rdm2.astype("float32")
-    return reorder_rdm(rdm1, rdm2)
-
 
 def make_rdm12s(fcivec, norb, nelec,Sz=0, strs_all = None,strs = None,opt=None):
+    raise NotImplementedError
     print("start making link_index")
-    link_index = gen_linkstr_index_qubit(range(2*norb), nelec,Sz=Sz,strs_all = strs_all,strs = strs)
-    #na = len(link_index)
-    #fcivec = fcivec.reshape(na,na)
+    link_index = gen_linkstr_index_qubit(norb, nelec,Sz=Sz,strs_all = strs_all,strs = strs)
     print("end making link_index")
-    rdm1a = np.zeros((norb,norb),dtype = "complex64")
-    rdm1b = np.zeros((norb,norb),dtype = "complex64")
-
+    rdm1a,rdm1b =make_rdm1s(fcivec,norb,nelec,Sz=0,strs = strs_all,opt=None)
     rdm2aa = np.zeros((norb,norb,norb,norb),dtype = "complex64")
     rdm2bb = np.zeros((norb,norb,norb,norb),dtype = "complex64")
     rdm2ab = np.zeros((norb,norb,norb,norb),dtype = "complex64")
-
     for str0, tab in enumerate(link_index):
-        t1 = np.zeros((norb,norb),dtype = "complex64")
-        t2 = np.zeros((norb,norb),dtype = "complex64")
-        for a, i, str1, sign in link_index[str0]:
-            if a%2 == i%2==0:
-                t1[i//2,a//2] += sign * fcivec[str1]
-            elif a%2 == i%2 == 1:
-                t2[i//2,a//2] += sign * fcivec[str1]
-            else:
-                raise ValueError("configure incorrect")
-        rdm1a += fcivec[str0].conj()*t1
-        rdm1b += fcivec[str0].conj()*t2
-        rdm2aa += np.einsum('ij,kl->jikl', t1.conj(), t1)
-        rdm2bb += np.einsum('ij,kl->jikl', t2.conj(), t2)
-        rdm2ab += np.einsum('ij,kl->jikl', t1.conj(), t2)
-        #rdm2aa  += np.outer(t1.conj(),t1).reshape(norb,norb,norb,norb)
-        #rdm2bb  += np.outer(t2.conj(),t2).reshape(norb,norb,norb,norb)
-        #rdm2ab  += np.outer(t1.conj(),t2).reshape(norb,norb,norb,norb)
+        #t1 = np.zeros((norb,norb),dtype = "complex64")
+        for r, s, str1, sign1 in link_index[str0]:
+            for p, q, str2, sign2 in link_index[str1]:
+                if p%2 == q%2==r%2 == s%2==0:
+                    rdm2aa[p//2,q//2,r//2,s//2] += sign1*sign2*fcivec[str0].conj() * fcivec[str2]
+                elif p%2 == q%2==r%2 == s%2==1:
+                    rdm2bb[p//2,q//2,r//2,s//2] += sign1*sign2*fcivec[str0].conj() * fcivec[str2]
+                else:
+                    rdm2ab[p//2,q//2,r//2,s//2] += sign1*sign2*fcivec[str0].conj() * fcivec[str2]
+   
     rdm1a, rdm2aa = reorder_rdm(rdm1a, rdm2aa, inplace=True)
     rdm1b, rdm2bb = reorder_rdm(rdm1b, rdm2bb, inplace=True)
     rdm1a = rdm1a.astype("float32")

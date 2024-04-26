@@ -1,6 +1,8 @@
 import numpy as np
 import localintegrals
 from dmet import dmet
+import time
+from scipy import optimize
 
 class MyDMET(dmet):
     def __init__(self, 
@@ -13,7 +15,7 @@ class MyDMET(dmet):
                  use_constrained_opt: bool =False):
         method = method.upper()
         super().__init__(theInts, impurityClusters, isTranslationInvariant, method, SCmethod, fitImpBath, use_constrained_opt)
-        assert method in ['CC','ED','MP2','VQE','VQECHEM',"SCI",'ADAPT','GET_CIRC']
+        assert method in ['CC','ED','MP2','VQE','VQECHEM',"FCI",'ADAPT','GET_CIRC']
         
         ## add setting for freeze orbitals.
         self.freez_flag = False
@@ -103,17 +105,17 @@ class MyDMET(dmet):
 
                 print('end vqe solver')
             elif ( self.method == 'VQECHEM' ):
-                from mqc.solver.dmet_soler_vqechem import solve
+                from mqc.solver.dmet_solver_vqechem import solve
                 print('start vqe solver from vqechem')
                 IMP_energy, IMP_1RDM = solve(dmetOEI,dmetFOCK, dmetTEI,Nelec_in_imp,numImpOrbs,chempot_imp)
                 print('end vqe solver')
-            elif ( self.method == 'SCI' ):
-                from mqc.solver.dmet_soler_sci import solve
+            elif ( self.method == 'FCI' ):
+                from mqc.solver.dmet_solver_fci import solve
                 assert( Nelec_in_imp % 2 == 0 )
-                print('start_sci_solve')
+                print('start fci solve')
                 DMguessRHF = self.ints.dmet_init_guess_rhf( loc2dmet, Norb_in_imp, Nelec_in_imp//2, numImpOrbs, chempot_imp )
                 IMP_energy, IMP_1RDM = solve( 0.0, dmetOEI, dmetFOCK, dmetTEI, Norb_in_imp, Nelec_in_imp, numImpOrbs, DMguessRHF, self.CC_E_TYPE, chempot_imp )
-                print('end vqe solver')
+                print('end fci solver')
             '''
             elif ( self.method == 'VQE' ):
                 import vqe
@@ -231,3 +233,75 @@ class MyDMET(dmet):
         print('total energy')
         print(self.energy)
         return Nelectrons
+
+    def doselfconsistent( self ):
+    
+        iteration = 0
+        u_diff = 1.0
+        convergence_threshold = 1e-5
+        print("RHF energy =", self.ints.fullEhf)
+        
+        while ( u_diff > convergence_threshold ):
+        
+            iteration += 1
+            print("DMET iteration", iteration)
+            umat_old = np.array( self.umat, copy=True )
+            rdm_old = self.transform_ed_1rdm() # At the very first iteration, this matrix will be zero
+            
+            # Find the chemical potential for the correlated impurity problem
+            start_ed = time.time()
+            if (( self.method == 'CC' ) and ( self.CC_E_TYPE == 'CASCI' )):
+                self.mu_imp = 0.0
+                self.doexact( self.mu_imp )
+            else:
+                self.mu_imp = optimize.newton( self.numeleccostfunction, self.mu_imp ,tol = 1e-8,maxiter=50,disp=False)
+                print("   Chemical potential =", self.mu_imp)
+            stop_ed = time.time()
+            self.time_ed += ( stop_ed - start_ed )
+            print("   Energy =", self.energy)
+            # self.verify_gradient( self.square2flat( self.umat ) ) # Only works for self.doSCF == False!!
+            if ( self.SCmethod != 'NONE' and not(self.altcostfunc) ):
+                self.hessian_eigenvalues( self.square2flat( self.umat ) )
+            
+            # Solve for the u-matrix
+            start_cf = time.time()
+            if ( self.altcostfunc and self.SCmethod == 'BFGS' ):
+                result = optimize.minimize( self.alt_costfunction, self.square2flat( self.umat ), jac=self.alt_costfunction_derivative, options={'disp': False} )
+                self.umat = self.flat2square( result.x )
+            elif ( self.SCmethod == 'LSTSQ' ):
+                result = optimize.leastsq( self.rdm_differences, self.square2flat( self.umat ), Dfun=self.rdm_differences_derivative, factor=0.1 )
+                self.umat = self.flat2square( result[ 0 ] )
+            elif ( self.SCmethod == 'BFGS' ):
+                result = optimize.minimize( self.costfunction, self.square2flat( self.umat ), jac=self.costfunction_derivative, options={'disp': False} )
+                self.umat = self.flat2square( result.x )
+            self.umat = self.umat - np.eye( self.umat.shape[ 0 ] ) * np.average( np.diag( self.umat ) ) # Remove arbitrary chemical potential shifts
+            if ( self.altcostfunc ):
+                print("   Cost function after convergence =", self.alt_costfunction( self.square2flat( self.umat ) ))
+            else:
+                print("   Cost function after convergence =", self.costfunction( self.square2flat( self.umat ) ))
+            stop_cf = time.time()
+            self.time_cf += ( stop_cf - start_cf )
+            
+            # Possibly print the u-matrix / 1-RDM
+            if self.print_u:
+                self.print_umat()
+            if self.print_rdm:
+                self.print_1rdm()
+            
+            # Get the error measure
+            u_diff   = np.linalg.norm( umat_old - self.umat )
+            rdm_diff = np.linalg.norm( rdm_old - self.transform_ed_1rdm() )
+            self.umat = self.relaxation * umat_old + ( 1.0 - self.relaxation ) * self.umat
+            print("   2-norm of difference old and new u-mat =", u_diff)
+            print("   2-norm of difference old and new 1-RDM =", rdm_diff)
+            print("******************************************************")
+            
+            if ( self.SCmethod == 'NONE' ):
+                u_diff = 0.1 * convergence_threshold # Do only 1 iteration
+        
+        print("Time cf func =", self.time_func)
+        print("Time cf grad =", self.time_grad)
+        print("Time dmet ed =", self.time_ed)
+        print("Time dmet cf =", self.time_cf)
+        
+        return self.energy

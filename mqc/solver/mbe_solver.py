@@ -21,7 +21,7 @@ from vqechem.orbital_optimize import vqe_oo as orbital_optimize_vqe
 import copy
 
 def pyscf_uhf(  fragment :Fragment,
-                atom_list:list, 
+                atom_list:list,
                 option: mbe_option
                 ) -> float:
     mol=gto.Mole()

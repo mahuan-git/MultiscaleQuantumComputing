@@ -133,7 +133,7 @@ class DMET():
             H = \sum_{pq} h1_{pq} a_p^+ a_q 
               + 1/2 \sum_{pqrs} h2_{psqr} a_p^+ a_q^+ a_r a_s
         '''
-        chempot_imp=self._chempot
+        chempot_imp=self._chempot_imp
         n_orb = self._ncas
         nqubit = self._ncas*2
         one_body_mo = self._one_body_mo

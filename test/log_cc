@@ -1,0 +1,1198 @@
+converged SCF energy = -5.2413948005736
+RHF energy = -5.241394800573596
+DMET iteration 1
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006241
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 2.3665569225167307e-15
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17771496153687  E_corr(MP2) -0.0260182731253259
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182731253259
+cycle = 1  E_corr(CCSD) = -0.0329040183421703  dE = -0.00688574522  norm(t1,t2) = 0.0302101
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.035321388442581  dE = -0.0024173701  norm(t1,t2) = 0.0120058
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  E_corr(CCSD) = -0.036881661477393  dE = -0.00156027303  norm(t1,t2) = 0.00486513
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368643684050639  dE = 1.72930723e-05  norm(t1,t2) = 0.000180835
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  E_corr(CCSD) = -0.0368632050625139  dE = 1.16334255e-06  norm(t1,t2) = 5.06172e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 6  E_corr(CCSD) = -0.0368633044448223  dE = -9.93823084e-08  norm(t1,t2) = 6.71285e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.13 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188559992856371  E_corr = -0.0368633044448223
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.08 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161971
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328672
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122239
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20391e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.14237e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188559992856371
+ECCSD2 = -4.188560008352691
+end_cc_solve
+DEBUG
+-3.599698008077739
+[[ 9.994e-01  6.347e-01 -5.246e-01 -5.243e-01]
+ [ 6.347e-01  9.994e-01  5.246e-01 -5.243e-01]
+ [-5.246e-01  5.246e-01  1.627e+00  1.231e-16]
+ [-5.243e-01 -5.243e-01  1.231e-16  3.737e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006246
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.7782480662710975e-15
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17771496153688  E_corr(MP2) -0.0260182731253259
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182731253259
+cycle = 1  E_corr(CCSD) = -0.0329040183421704  dE = -0.00688574522  norm(t1,t2) = 0.0302101
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353213884425811  dE = -0.0024173701  norm(t1,t2) = 0.0120058
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368816614773931  dE = -0.00156027303  norm(t1,t2) = 0.00486513
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.036864368405064  dE = 1.72930723e-05  norm(t1,t2) = 0.000180835
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.036863205062514  dE = 1.16334255e-06  norm(t1,t2) = 5.06172e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368633044448224  dE = -9.93823084e-08  norm(t1,t2) = 6.71285e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.11 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188559992856379  E_corr = -0.03686330444482239
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.06 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161971
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328672
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122239
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20391e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.14237e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188559992856379
+ECCSD2 = -4.188560008352702
+end_cc_solve
+DEBUG
+-3.5996980080777448
+[[ 9.994e-01  6.347e-01  5.243e-01  5.246e-01]
+ [ 6.347e-01  9.994e-01  5.243e-01 -5.246e-01]
+ [ 5.243e-01  5.243e-01  3.737e-01  1.521e-15]
+ [ 5.246e-01 -5.246e-01  1.521e-15  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006257
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.7707255318529517e-15
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17771496153688  E_corr(MP2) -0.0260182731253259
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182731253259
+cycle = 1  E_corr(CCSD) = -0.0329040183421704  dE = -0.00688574522  norm(t1,t2) = 0.0302101
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 2  E_corr(CCSD) = -0.0353213884425811  dE = -0.0024173701  norm(t1,t2) = 0.0120058
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 3  E_corr(CCSD) = -0.036881661477393  dE = -0.00156027303  norm(t1,t2) = 0.00486513
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.036864368405064  dE = 1.72930723e-05  norm(t1,t2) = 0.000180835
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.036863205062514  dE = 1.16334255e-06  norm(t1,t2) = 5.06172e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368633044448223  dE = -9.93823083e-08  norm(t1,t2) = 6.71285e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.13 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.18855999285638  E_corr = -0.03686330444482235
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161971
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328672
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122239
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20391e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.14237e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188559992856381
+ECCSD2 = -4.188560008352702
+end_cc_solve
+DEBUG
+-3.599698008077744
+[[ 9.994e-01  6.347e-01  5.246e-01  5.243e-01]
+ [ 6.347e-01  9.994e-01 -5.246e-01  5.243e-01]
+ [ 5.246e-01 -5.246e-01  1.627e+00  1.405e-15]
+ [ 5.243e-01  5.243e-01  1.405e-15  3.737e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094234880006259
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.0633828509378706e-15
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17771496153688  E_corr(MP2) -0.0260182731253259
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182731253259
+cycle = 1  E_corr(CCSD) = -0.0329040183421703  dE = -0.00688574522  norm(t1,t2) = 0.0302101
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 2  E_corr(CCSD) = -0.0353213884425811  dE = -0.0024173701  norm(t1,t2) = 0.0120058
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 3  E_corr(CCSD) = -0.036881661477393  dE = -0.00156027303  norm(t1,t2) = 0.00486513
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 4  E_corr(CCSD) = -0.036864368405064  dE = 1.72930723e-05  norm(t1,t2) = 0.000180835
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.036863205062514  dE = 1.16334255e-06  norm(t1,t2) = 5.06172e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368633044448224  dE = -9.93823084e-08  norm(t1,t2) = 6.71285e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.14 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188559992856382  E_corr = -0.03686330444482236
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.08 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161971
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328672
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122239
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20391e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.14237e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188559992856382
+ECCSD2 = -4.188560008352706
+end_cc_solve
+DEBUG
+-3.599698008077743
+[[ 9.994e-01  6.347e-01  5.243e-01  5.246e-01]
+ [ 6.347e-01  9.994e-01  5.243e-01 -5.246e-01]
+ [ 5.243e-01  5.243e-01  3.737e-01 -1.005e-15]
+ [ 5.246e-01 -5.246e-01 -1.005e-15  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.809423488000624
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 1.1120330373244012e-15
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.02 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17771496153688  E_corr(MP2) -0.026018273125326
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.026018273125326
+cycle = 1  E_corr(CCSD) = -0.0329040183421704  dE = -0.00688574522  norm(t1,t2) = 0.0302101
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353213884425812  dE = -0.0024173701  norm(t1,t2) = 0.0120058
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368816614773931  dE = -0.00156027303  norm(t1,t2) = 0.00486513
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368643684050641  dE = 1.72930723e-05  norm(t1,t2) = 0.000180835
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368632050625141  dE = 1.16334255e-06  norm(t1,t2) = 5.06172e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368633044448224  dE = -9.93823083e-08  norm(t1,t2) = 6.71285e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.14 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.188559992856379  E_corr = -0.03686330444482243
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161971
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328672
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122239
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20391e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.14237e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188559992856379
+ECCSD2 = -4.1885600083527015
+end_cc_solve
+DEBUG
+-3.5996980080777443
+[[ 9.994e-01  6.347e-01 -5.243e-01 -5.246e-01]
+ [ 6.347e-01  9.994e-01 -5.243e-01  5.246e-01]
+ [-5.243e-01 -5.243e-01  3.737e-01 -8.793e-16]
+ [-5.246e-01  5.246e-01 -8.793e-16  1.627e+00]]
+total energy
+-5.366366867836193
+      (chemical potential , number of electrons) = ( 0.0 , 9.994254871885737 )
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284236
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417623150224e-07
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17791490504151  E_corr(MP2) -0.026018211162394
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182111624319
+cycle = 1  E_corr(CCSD) = -0.0329038915209631  dE = -0.00688568036  norm(t1,t2) = 0.03021
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353212493685225  dE = -0.00241735785  norm(t1,t2) = 0.0120059
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368815325317249  dE = -0.00156028316  norm(t1,t2) = 0.00486518
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368642382409678  dE = 1.72942908e-05  norm(t1,t2) = 0.000180804
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368630742585132  dE = 1.16398245e-06  norm(t1,t2) = 5.06129e-05
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368631739741631  dE = -9.97156499e-08  norm(t1,t2) = 6.71154e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.16 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.188759867853276  E_corr = -0.03686317397416312
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.08 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161962
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328655
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122236
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20362e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.13973e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188759867853276
+ECCSD2 = -4.188759883329169
+end_cc_solve
+DEBUG
+-3.5998224864862367
+[[ 9.995e-01  6.347e-01 -5.246e-01 -5.243e-01]
+ [ 6.347e-01  9.995e-01  5.246e-01 -5.243e-01]
+ [-5.246e-01  5.246e-01  1.627e+00 -3.631e-17]
+ [-5.243e-01 -5.243e-01 -3.631e-17  3.737e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284252
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417621430504e-07
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17791490504151  E_corr(MP2) -0.0260182111623941
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.026018211162432
+cycle = 1  E_corr(CCSD) = -0.0329038915209632  dE = -0.00688568036  norm(t1,t2) = 0.03021
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353212493685225  dE = -0.00241735785  norm(t1,t2) = 0.0120059
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.036881532531725  dE = -0.00156028316  norm(t1,t2) = 0.00486518
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368642382409678  dE = 1.72942908e-05  norm(t1,t2) = 0.000180804
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368630742585133  dE = 1.16398245e-06  norm(t1,t2) = 5.06129e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368631739741632  dE = -9.97156499e-08  norm(t1,t2) = 6.71154e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.13 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188759867853284  E_corr = -0.03686317397416315
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161962
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328655
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122236
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20362e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.13973e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188759867853284
+ECCSD2 = -4.188759883329179
+end_cc_solve
+DEBUG
+-3.599822486486241
+[[ 9.995e-01  6.347e-01  5.243e-01  5.246e-01]
+ [ 6.347e-01  9.995e-01  5.243e-01 -5.246e-01]
+ [ 5.243e-01  5.243e-01  3.737e-01  1.692e-15]
+ [ 5.246e-01 -5.246e-01  1.692e-15  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284245
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.7623417717065394e-07
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17791490504152  E_corr(MP2) -0.026018211162394
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182111624319
+cycle = 1  E_corr(CCSD) = -0.0329038915209631  dE = -0.00688568036  norm(t1,t2) = 0.03021
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353212493685225  dE = -0.00241735785  norm(t1,t2) = 0.0120059
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368815325317249  dE = -0.00156028316  norm(t1,t2) = 0.00486518
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368642382409678  dE = 1.72942908e-05  norm(t1,t2) = 0.000180804
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368630742585132  dE = 1.16398245e-06  norm(t1,t2) = 5.06129e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368631739741631  dE = -9.97156499e-08  norm(t1,t2) = 6.71154e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.13 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188759867853285  E_corr = -0.03686317397416311
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.08 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161962
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328655
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122236
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20362e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.13973e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188759867853285
+ECCSD2 = -4.18875988332918
+end_cc_solve
+DEBUG
+-3.599822486486243
+[[ 9.995e-01  6.347e-01  5.246e-01  5.243e-01]
+ [ 6.347e-01  9.995e-01 -5.246e-01  5.243e-01]
+ [ 5.246e-01 -5.246e-01  1.627e+00  1.357e-15]
+ [ 5.243e-01  5.243e-01  1.357e-15  3.737e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094238712284256
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.762341767408846e-07
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17791490504152  E_corr(MP2) -0.026018211162394
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260182111624319
+cycle = 1  E_corr(CCSD) = -0.0329038915209631  dE = -0.00688568036  norm(t1,t2) = 0.03021
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353212493685225  dE = -0.00241735785  norm(t1,t2) = 0.0120059
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368815325317249  dE = -0.00156028316  norm(t1,t2) = 0.00486518
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368642382409678  dE = 1.72942908e-05  norm(t1,t2) = 0.000180804
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368630742585132  dE = 1.16398245e-06  norm(t1,t2) = 5.06129e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368631739741631  dE = -9.97156499e-08  norm(t1,t2) = 6.71154e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+    CPU time for CCSD      0.12 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188759867853287  E_corr = -0.0368631739741631
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.06 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161962
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328655
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122236
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20362e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.13973e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.188759867853287
+ECCSD2 = -4.1887598833291815
+end_cc_solve
+DEBUG
+-3.599822486486239
+[[ 9.995e-01  6.347e-01  5.243e-01  5.246e-01]
+ [ 6.347e-01  9.995e-01  5.243e-01 -5.246e-01]
+ [ 5.243e-01  5.243e-01  3.737e-01 -7.999e-16]
+ [ 5.246e-01 -5.246e-01 -7.999e-16  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.809423871228423
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 3.762341767997253e-07
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17791490504151  E_corr(MP2) -0.0260182111623941
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.026018211162432
+cycle = 1  E_corr(CCSD) = -0.0329038915209632  dE = -0.00688568036  norm(t1,t2) = 0.03021
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353212493685225  dE = -0.00241735785  norm(t1,t2) = 0.0120059
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368815325317249  dE = -0.00156028316  norm(t1,t2) = 0.00486518
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368642382409678  dE = 1.72942908e-05  norm(t1,t2) = 0.000180804
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  E_corr(CCSD) = -0.0368630742585132  dE = 1.16398245e-06  norm(t1,t2) = 5.06129e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368631739741631  dE = -9.97156499e-08  norm(t1,t2) = 6.71154e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+    CPU time for CCSD      0.12 sec, wall time      0.03 sec
+CCSD converged
+E(CCSD) = -4.188759867853284  E_corr = -0.03686317397416315
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.08 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161962
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328655
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122236
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.20362e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.13973e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.1887598678532845
+ECCSD2 = -4.18875988332918
+end_cc_solve
+DEBUG
+-3.5998224864862416
+[[ 9.995e-01  6.347e-01 -5.243e-01 -5.246e-01]
+ [ 6.347e-01  9.995e-01 -5.243e-01  5.246e-01]
+ [-5.243e-01 -5.243e-01  3.737e-01 -9.585e-16]
+ [-5.246e-01  5.246e-01 -9.585e-16  1.627e+00]]
+total energy
+-5.366989259878684
+      (chemical potential , number of electrons) = ( 0.0001 , 9.994775697159323 )
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279829460107
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.13954362175057e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 143 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992109440457  E_corr(MP2) -0.0260175774494895
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175774540784
+cycle = 1  E_corr(CCSD) = -0.0329026011114458  dE = -0.00688502366  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198312719181  dE = -0.00241723016  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  E_corr(CCSD) = -0.0368802104867246  dE = -0.00156037921  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  E_corr(CCSD) = -0.03686290413486  dE = 1.73063519e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  E_corr(CCSD) = -0.0368617338069439  dE = 1.17032792e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618368280017  dE = -1.03021058e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 7  E_corr(CCSD) = -0.036861848621461  dE = -1.17934593e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.17 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765365576544  E_corr = -0.03686184862146102
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15334e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765365576544
+ECCSD2 = -4.190765369052538
+end_cc_solve
+DEBUG
+-3.60107045394349
+[[ 1.000e+00  6.347e-01 -5.249e-01 -5.240e-01]
+ [ 6.347e-01  1.000e+00  5.249e-01 -5.240e-01]
+ [-5.249e-01  5.249e-01  1.627e+00 -2.478e-16]
+ [-5.240e-01 -5.240e-01 -2.478e-16  3.731e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279829460123
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.139543621272927e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 147 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992109440458  E_corr(MP2) -0.0260175774494895
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175774540784
+cycle = 1  E_corr(CCSD) = -0.0329026011114458  dE = -0.00688502366  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198312719181  dE = -0.00241723016  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802104867246  dE = -0.00156037921  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.03686290413486  dE = 1.73063519e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617338069439  dE = 1.17032792e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618368280017  dE = -1.03021058e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618486214609  dE = -1.17934592e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.14 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.19076536557655  E_corr = -0.03686184862146089
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15334e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.19076536557655
+ECCSD2 = -4.190765369052544
+end_cc_solve
+DEBUG
+-3.6010704539434926
+[[ 1.000e+00  6.347e-01  5.240e-01  5.249e-01]
+ [ 6.347e-01  1.000e+00  5.240e-01 -5.249e-01]
+ [ 5.240e-01  5.240e-01  3.731e-01  1.504e-15]
+ [ 5.249e-01 -5.249e-01  1.504e-15  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279829460127
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.139543622455612e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992109440458  E_corr(MP2) -0.0260175774494895
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175774540784
+cycle = 1  E_corr(CCSD) = -0.0329026011114458  dE = -0.00688502366  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198312719181  dE = -0.00241723016  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802104867246  dE = -0.00156037921  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.03686290413486  dE = 1.73063519e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617338069439  dE = 1.17032792e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618368280017  dE = -1.03021058e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618486214608  dE = -1.17934592e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.16 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765365576553  E_corr = -0.03686184862146084
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.08 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15334e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765365576553
+ECCSD2 = -4.190765369052546
+end_cc_solve
+DEBUG
+-3.601070453943493
+[[ 1.000e+00  6.347e-01  5.249e-01  5.240e-01]
+ [ 6.347e-01  1.000e+00 -5.249e-01  5.240e-01]
+ [ 5.249e-01 -5.249e-01  1.627e+00  1.244e-15]
+ [ 5.240e-01  5.240e-01  1.244e-15  3.731e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279829460134
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.139543622018164e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992109440458  E_corr(MP2) -0.0260175774494894
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175774540783
+cycle = 1  E_corr(CCSD) = -0.0329026011114457  dE = -0.00688502366  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.035319831271918  dE = -0.00241723016  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802104867245  dE = -0.00156037921  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368629041348599  dE = 1.73063519e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617338069439  dE = 1.17032792e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618368280016  dE = -1.03021058e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618486214609  dE = -1.17934593e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.14 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765365576553  E_corr = -0.03686184862146091
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15334e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765365576553
+ECCSD2 = -4.1907653690525475
+end_cc_solve
+DEBUG
+-3.6010704539434943
+[[ 1.000e+00  6.347e-01  5.240e-01  5.249e-01]
+ [ 6.347e-01  1.000e+00  5.240e-01 -5.249e-01]
+ [ 5.240e-01  5.240e-01  3.731e-01 -7.581e-16]
+ [ 5.249e-01 -5.249e-01 -7.581e-16  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279829460105
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.1395436223014285e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992109440458  E_corr(MP2) -0.0260175774494895
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175774540784
+cycle = 1  E_corr(CCSD) = -0.0329026011114458  dE = -0.00688502366  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198312719181  dE = -0.00241723016  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802104867246  dE = -0.00156037921  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.03686290413486  dE = 1.73063519e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.036861733806944  dE = 1.17032792e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618368280017  dE = -1.03021058e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.036861848621461  dE = -1.17934593e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.16 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765365576549  E_corr = -0.03686184862146104
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15334e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765365576549
+ECCSD2 = -4.190765369052545
+end_cc_solve
+DEBUG
+-3.6010704539434926
+[[ 1.000e+00  6.347e-01 -5.240e-01 -5.249e-01]
+ [ 6.347e-01  1.000e+00 -5.240e-01  5.249e-01]
+ [-5.240e-01 -5.240e-01  3.731e-01 -5.657e-16]
+ [-5.249e-01  5.249e-01 -5.657e-16  1.627e+00]]
+total energy
+-5.373229097164943
+      (chemical potential , number of electrons) = ( 0.001103081667812405 , 9.99999906985795 )
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279837215279
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.140212032558553e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.1799214517431  E_corr(MP2) -0.0260175773346727
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.026017577339263
+cycle = 1  E_corr(CCSD) = -0.0329026008787002  dE = -0.00688502354  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198310156607  dE = -0.00241723014  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802102466732  dE = -0.00156037923  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368629038926869  dE = 1.7306354e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617335636528  dE = 1.17032903e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618365852929  dE = -1.0302164e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618483787236  dE = -1.17934307e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.18 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.19076572278715  E_corr = -0.03686184837872362
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.06 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15333e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.19076572278715
+ECCSD2 = -4.190765726263137
+end_cc_solve
+DEBUG
+-3.601070676033334
+[[ 1.000e+00  6.347e-01 -5.249e-01 -5.240e-01]
+ [ 6.347e-01  1.000e+00  5.249e-01 -5.240e-01]
+ [-5.249e-01  5.249e-01  1.627e+00  2.840e-16]
+ [-5.240e-01 -5.240e-01  2.840e-16  3.731e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279837215297
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.140212032310486e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992145174311  E_corr(MP2) -0.0260175773346726
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.026017577339263
+cycle = 1  E_corr(CCSD) = -0.0329026008787003  dE = -0.00688502354  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198310156608  dE = -0.00241723014  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 3  E_corr(CCSD) = -0.0368802102466732  dE = -0.00156037923  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368629038926869  dE = 1.7306354e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617335636528  dE = 1.17032903e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618365852929  dE = -1.0302164e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618483787236  dE = -1.17934307e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+    CPU time for CCSD      0.16 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765722787159  E_corr = -0.03686184837872364
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15333e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765722787159
+ECCSD2 = -4.190765726263145
+end_cc_solve
+DEBUG
+-3.6010706760333377
+[[ 1.000e+00  6.347e-01  5.240e-01  5.249e-01]
+ [ 6.347e-01  1.000e+00  5.240e-01 -5.249e-01]
+ [ 5.240e-01  5.240e-01  3.731e-01  1.407e-15]
+ [ 5.249e-01 -5.249e-01  1.407e-15  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279837215305
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.140212032591744e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992145174311  E_corr(MP2) -0.0260175773346727
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.026017577339263
+cycle = 1  E_corr(CCSD) = -0.0329026008787003  dE = -0.00688502354  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198310156608  dE = -0.00241723014  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802102466733  dE = -0.00156037923  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.0368629038926869  dE = 1.7306354e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617335636529  dE = 1.17032903e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.0368618365852929  dE = -1.0302164e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618483787235  dE = -1.17934306e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.16 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765722787162  E_corr = -0.03686184837872353
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15333e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.1907657227871615
+ECCSD2 = -4.190765726263146
+end_cc_solve
+DEBUG
+-3.601070676033334
+[[ 1.000e+00  6.347e-01  5.249e-01  5.240e-01]
+ [ 6.347e-01  1.000e+00 -5.249e-01  5.240e-01]
+ [ 5.249e-01 -5.249e-01  1.627e+00  6.731e-16]
+ [ 5.240e-01  5.240e-01  6.731e-16  3.731e-01]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279837215318
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.140212032392465e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992145174311  E_corr(MP2) -0.0260175773346727
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175773392631
+cycle = 1  E_corr(CCSD) = -0.0329026008787004  dE = -0.00688502354  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 2  E_corr(CCSD) = -0.0353198310156609  dE = -0.00241723014  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802102466734  dE = -0.00156037923  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.036862903892687  dE = 1.7306354e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.036861733563653  dE = 1.17032903e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.036861836585293  dE = -1.0302164e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618483787237  dE = -1.17934307e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+    CPU time for CCSD      0.15 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765722787162  E_corr = -0.03686184837872374
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.07 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15333e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765722787162
+ECCSD2 = -4.190765726263148
+end_cc_solve
+DEBUG
+-3.601070676033335
+[[ 1.000e+00  6.347e-01  5.240e-01  5.249e-01]
+ [ 6.347e-01  1.000e+00  5.240e-01 -5.249e-01]
+ [ 5.240e-01  5.240e-01  3.731e-01 -1.220e-15]
+ [ 5.249e-01 -5.249e-01 -1.220e-15  1.627e+00]]
+DMET::exact : Performing a ( 4 orb, 4 el ) DMET active space calculation.
+start_cc_solve
+psi4cc::solve : RHF homo-lumo gap = 0.8094279837215286
+Two-norm difference of 1-RDM(RHF) and 1-RDM(FOCK(RHF)) = 4.1402120319952306e-06
+
+******** <class 'pyscf.cc.ccsd.CCSD'> ********
+CC2 = 0
+CCSD nocc = 2, nmo = 4
+max_cycle = 50
+direct = 0
+conv_tol = 1e-07
+conv_tol_normt = 1e-05
+diis_space = 6
+diis_start_cycle = 0
+diis_start_energy_diff = 1e+09
+max_memory 4000 MB (current use 148 MB)
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+Init t2, MP2 energy = -4.17992145174311  E_corr(MP2) -0.0260175773346727
+    CPU time for init mp2      0.00 sec, wall time      0.00 sec
+Init E_corr(CCSD) = -0.0260175773392631
+cycle = 1  E_corr(CCSD) = -0.0329026008787003  dE = -0.00688502354  norm(t1,t2) = 0.0302091
+    CPU time for CCSD iter      0.03 sec, wall time      0.00 sec
+cycle = 2  E_corr(CCSD) = -0.0353198310156608  dE = -0.00241723014  norm(t1,t2) = 0.0120066
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+cycle = 3  E_corr(CCSD) = -0.0368802102466733  dE = -0.00156037923  norm(t1,t2) = 0.00486564
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 4  E_corr(CCSD) = -0.036862903892687  dE = 1.7306354e-05  norm(t1,t2) = 0.000180496
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 5  E_corr(CCSD) = -0.0368617335636529  dE = 1.17032903e-06  norm(t1,t2) = 5.05697e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 6  E_corr(CCSD) = -0.036861836585293  dE = -1.0302164e-07  norm(t1,t2) = 6.69865e-06
+    CPU time for CCSD iter      0.02 sec, wall time      0.01 sec
+cycle = 7  E_corr(CCSD) = -0.0368618483787237  dE = -1.17934307e-08  norm(t1,t2) = 4.16332e-07
+    CPU time for CCSD iter      0.03 sec, wall time      0.01 sec
+    CPU time for CCSD      0.16 sec, wall time      0.04 sec
+CCSD converged
+E(CCSD) = -4.190765722787158  E_corr = -0.03686184837872367
+    CPU time for CCSD integral transformation      0.01 sec, wall time      0.00 sec
+    CPU time for CCSD lambda initialization      0.06 sec, wall time      0.02 sec
+cycle = 1  norm(lambda1,lambda2) = 0.00161855
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 2  norm(lambda1,lambda2) = 0.000328509
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 3  norm(lambda1,lambda2) = 0.000122224
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 4  norm(lambda1,lambda2) = 1.2008e-05
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+cycle = 5  norm(lambda1,lambda2) = 4.15333e-07
+    CPU time for CCSD iter      0.02 sec, wall time      0.00 sec
+ECCSD1 = -4.190765722787158
+ECCSD2 = -4.190765726263145
+end_cc_solve
+DEBUG
+-3.601070676033336
+[[ 1.000e+00  6.347e-01 -5.240e-01 -5.249e-01]
+ [ 6.347e-01  1.000e+00 -5.240e-01  5.249e-01]
+ [-5.240e-01 -5.240e-01  3.731e-01 -9.187e-16]
+ [-5.249e-01  5.249e-01 -9.187e-16  1.627e+00]]
+total energy
+-5.373230207614155
+      (chemical potential , number of electrons) = ( 0.0011032602867683192 , 9.999999999778664 )
+   Chemical potential = 0.001103260329282456
+   Energy = -5.373230207614155
+   Cost function after convergence = 0.014213229833151438
+The u-matrix =
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+[[0. 0.]
+ [0. 0.]]
+The ED 1-RDM of the impurities ( + baths ) =
+[[ 1.000e+00  6.347e-01 -5.249e-01 -5.240e-01]
+ [ 6.347e-01  1.000e+00  5.249e-01 -5.240e-01]
+ [-5.249e-01  5.249e-01  1.627e+00  2.840e-16]
+ [-5.240e-01 -5.240e-01  2.840e-16  3.731e-01]]
+[[ 1.000e+00  6.347e-01  5.240e-01  5.249e-01]
+ [ 6.347e-01  1.000e+00  5.240e-01 -5.249e-01]
+ [ 5.240e-01  5.240e-01  3.731e-01  1.407e-15]
+ [ 5.249e-01 -5.249e-01  1.407e-15  1.627e+00]]
+[[ 1.000e+00  6.347e-01  5.249e-01  5.240e-01]
+ [ 6.347e-01  1.000e+00 -5.249e-01  5.240e-01]
+ [ 5.249e-01 -5.249e-01  1.627e+00  6.731e-16]
+ [ 5.240e-01  5.240e-01  6.731e-16  3.731e-01]]
+[[ 1.000e+00  6.347e-01  5.240e-01  5.249e-01]
+ [ 6.347e-01  1.000e+00  5.240e-01 -5.249e-01]
+ [ 5.240e-01  5.240e-01  3.731e-01 -1.220e-15]
+ [ 5.249e-01 -5.249e-01 -1.220e-15  1.627e+00]]
+[[ 1.000e+00  6.347e-01 -5.240e-01 -5.249e-01]
+ [ 6.347e-01  1.000e+00 -5.240e-01  5.249e-01]
+ [-5.240e-01 -5.240e-01  3.731e-01 -9.187e-16]
+ [-5.249e-01  5.249e-01 -9.187e-16  1.627e+00]]
+   2-norm of difference old and new u-mat = 0.0
+   2-norm of difference old and new 1-RDM = 3.7455096717967415
+******************************************************
+Time cf func = 0.000225067138671875
+Time cf grad = 0.0
+Time dmet ed = 2.892477035522461
+Time dmet cf = 0.0003352165222167969
+dmet energy:  -5.373230207614155

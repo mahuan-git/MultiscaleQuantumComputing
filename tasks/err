@@ -1,0 +1,10 @@
+==============================
+*** Open Babel Warning  in PerceiveBondOrders
+  Failed to kekulize aromatic bonds in OBMol::PerceiveBondOrders (title is fenzi3)
+
+==============================
+*** Open Babel Warning  in PerceiveBondOrders
+  Failed to kekulize aromatic bonds in OBMol::PerceiveBondOrders (title is fenzi3)
+
+slurmstepd: error: *** JOB 7081 ON node2 CANCELLED AT 2024-04-26T12:13:04 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 7082 ON node3 CANCELLED AT 2024-04-26T12:13:04 DUE TO TIME LIMIT ***

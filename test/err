@@ -1,0 +1,12 @@
+/public/home/jlyang/quantum/program/ABQCC/mqc/tools/rdm.py:137: ComplexWarning: Casting complex values to real discards the imaginary part
+  rdm1 = np.array(rdm1,dtype = "float32")
+/public/home/jlyang/quantum/program/ABQCC/mqc/tools/rdm.py:171: ComplexWarning: Casting complex values to real discards the imaginary part
+  rdm2 = rdm2.astype("float32")
+/public/home/jlyang/quantum/anaconda3/envs/vqechem/lib/python3.7/site-packages/scipy/optimize/zeros.py:341: RuntimeWarning: Tolerance of 2.6833749112707716e-08 reached.
+  warnings.warn(msg, RuntimeWarning)
+/public/home/jlyang/quantum/anaconda3/envs/vqechem/lib/python3.7/site-packages/scipy/optimize/zeros.py:341: RuntimeWarning: Tolerance of -5.8747220635564125e-08 reached.
+  warnings.warn(msg, RuntimeWarning)
+/public/home/jlyang/quantum/anaconda3/envs/vqechem/lib/python3.7/site-packages/scipy/optimize/zeros.py:341: RuntimeWarning: Tolerance of -5.457719948545603e-08 reached.
+  warnings.warn(msg, RuntimeWarning)
+/public/home/jlyang/quantum/anaconda3/envs/vqechem/lib/python3.7/site-packages/scipy/optimize/zeros.py:341: RuntimeWarning: Tolerance of -1.7584181488117245e-06 reached.
+  warnings.warn(msg, RuntimeWarning)

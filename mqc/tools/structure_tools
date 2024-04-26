@@ -1,0 +1,6 @@
+from mqc.system.structure import Structure_Metal_Mol
+import copy
+
+def make_unbonded_structure(struct: Structure_Metal_Mol) -> Structure_Metal_Mol:
+    new_struct = copy.deepcopy(struct)
+    return new_struct

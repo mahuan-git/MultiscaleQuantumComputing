@@ -11,7 +11,7 @@ def test():
     frag = SimpleFragment(structure = struct, natom_per_fragment=2)
     frag.build()
 
-    dmet = DMET_Base(fragment = frag,method = "VQECHEM")
+    dmet = DMET_Base(fragment = frag,method = "VQECHEM",isTI = True)
     dmet.build()
     energy = dmet.run()
     print("dmet energy: ",energy)
